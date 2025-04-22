@@ -1,0 +1,25 @@
+import { create } from "zustand";
+
+export const useStates = create((set) => ({
+  // ...........discardImage...................//
+  discardImage: false,
+  setDiscardImage: (value) => set({ discardImage: value }),
+
+  // .....popupPosition top bottom................//
+  popupPosition: "bottom",
+  setPopupPosition: (value) => set({ popupPosition: value }),
+  // .........popupPosition left right................//
+  popupPositionLeftRight: "left",
+  setPopupPositionLeftRight: (value) => set({ popupPositionLeftRight: value }),
+  // ...............isShowCloseChat...............//
+  isShowCloseChat: false,
+  setisShowCloseChat: (value) => set({ isShowCloseChat: value }),
+
+  // ...............isMessageHoverPopup..................//
+  isMessageHoverPopup: false,
+  setIsMessageHoverPopup: (value) => set({ isMessageHoverPopup: value }),
+
+  // ...............isReplyChatOpen..................//
+  isReplyChatOpen: false,
+  setIsReplyChatOpen: (value) => set({ isReplyChatOpen: value }),
+}));
