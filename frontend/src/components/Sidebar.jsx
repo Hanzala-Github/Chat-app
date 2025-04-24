@@ -9,9 +9,8 @@ import { useStates } from "../store/useStates";
 export const Sidebar = ({
   handleMouseRight,
   handleClosePopup,
-  rightPopUp,
-  setRightPopUp,
-  setisShowCloseChat,
+  // rightPopUp,
+  // setRightPopUp,
 }) => {
   const {
     getUsers,
@@ -25,7 +24,8 @@ export const Sidebar = ({
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [activeColor, setactiveColor] = useState(false);
   const [searchContacts, setsearchContacts] = useState("");
-  const { isMessageHoverPopup } = useStates();
+  const { isMessageHoverPopup, setisShowCloseChat, rightPopUp, setRightPopUp } =
+    useStates();
 
   useEffect(() => {
     getUsers();

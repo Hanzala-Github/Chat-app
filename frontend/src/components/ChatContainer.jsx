@@ -6,8 +6,12 @@ import {
   MessageSkeleton,
   ChatBubble,
 } from "./component";
+import { useStates } from "../store/useStates";
 
-const ChatContainer = ({ handleClosePopup, setRightPopUp }) => {
+const ChatContainer = ({
+  handleClosePopup,
+  //  setRightPopUp
+}) => {
   const {
     getMessages,
     isMessagesLoading,
@@ -15,7 +19,7 @@ const ChatContainer = ({ handleClosePopup, setRightPopUp }) => {
     subscribeToMessages,
     unsubscribeFromMessages,
   } = useChatStore();
-
+  const { setRightPopUp } = useStates();
   useEffect(() => {
     getMessages(selectedUser);
     subscribeToMessages();
@@ -31,11 +35,11 @@ const ChatContainer = ({ handleClosePopup, setRightPopUp }) => {
       </div>
     );
   }
-
+  console.log("Container");
   // ...............This is the jsx return part...........//
   return (
     <div
-      onClick={handleClosePopup}
+      onClick={(e) => handleClosePopup(e)}
       className="flex-1 flex flex-col overflow-auto"
     >
       <ChatHeader />

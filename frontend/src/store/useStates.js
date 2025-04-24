@@ -22,4 +22,7 @@ export const useStates = create((set) => ({
   // ...............isReplyChatOpen..................//
   isReplyChatOpen: false,
   setIsReplyChatOpen: (value) => set({ isReplyChatOpen: value }),
+  // ...............rightPopUp..................//
+  rightPopUp: null,
+  setRightPopUp: (value) => set({ rightPopUp: value }),
 }));

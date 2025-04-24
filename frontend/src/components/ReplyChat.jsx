@@ -1,7 +1,11 @@
 import { X } from "lucide-react";
 import React from "react";
+import { useStates } from "../store/useStates";
 
 export function ReplyChat() {
+  const { setIsReplyChatOpen } = useStates();
+
+  // ...............This is the jsx return part.............//
   return (
     <div className="max-w-[88%] w-full h-14 flex justify-between items-center gap-3 pl-3 bg-[#4A5565] rounded-md shadow-sm border-l-[#7BA2D2] border-l-[5px] border-t-[#d4d4d4] border-t-[1px] overflow-hidden">
       {/* Left side: User avatar */}
@@ -31,7 +35,10 @@ export function ReplyChat() {
         />
 
         {/* Close button */}
-        <span className="w-full h-full hover:bg-[#576272] flex items-center justify-center">
+        <span
+          onClick={() => setIsReplyChatOpen(false)}
+          className="w-full h-full hover:bg-[#576272] flex items-center justify-center"
+        >
           <X size={15} className="border rounded-full" />
         </span>
       </div>

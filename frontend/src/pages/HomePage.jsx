@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   ChatContainer,
   NoChatSelected,
@@ -6,11 +6,17 @@ import {
 } from "../components/component";
 import { useChatStore } from "../store/useChatStore";
 import { useStates } from "../store/useStates";
+import { useFunctions } from "../hooks/useFunctions";
 export const HomePage = () => {
-  const [rightPopUp, setRightPopUp] = useState(null);
+  // const [rightPopUp, setRightPopUp] = useState(null);
   const { selectedUser } = useChatStore();
-  const { setisShowCloseChat, setPopupPosition, setIsMessageHoverPopup } =
-    useStates();
+  const {
+    setisShowCloseChat,
+    setPopupPosition,
+    // setIsMessageHoverPopup,
+    setRightPopUp,
+  } = useStates();
+  const { handleClosePopup } = useFunctions();
 
   const handleMouseRight = (e, user) => {
     e.preventDefault();
@@ -33,11 +39,12 @@ export const HomePage = () => {
     });
   };
 
-  const handleClosePopup = () => {
-    setRightPopUp(null);
-    setIsMessageHoverPopup(false);
-    console.log("Closed the all popups");
-  };
+  // const handleClosePopup = (e) => {
+  //   e.stopPropagation();
+  //   setRightPopUp(null);
+  //   setIsMessageHoverPopup(false);
+  //   console.log("Closed the all popups");
+  // };
 
   // ...............This is the jsx return part............//
   return (
@@ -48,8 +55,8 @@ export const HomePage = () => {
             <Sidebar
               handleMouseRight={handleMouseRight}
               handleClosePopup={handleClosePopup}
-              rightPopUp={rightPopUp}
-              setRightPopUp={setRightPopUp}
+              // rightPopUp={rightPopUp}
+              // setRightPopUp={setRightPopUp}
             />
 
             {!selectedUser ? (
@@ -57,7 +64,7 @@ export const HomePage = () => {
             ) : (
               <ChatContainer
                 handleClosePopup={handleClosePopup}
-                setRightPopUp={setRightPopUp}
+                // setRightPopUp={setRightPopUp}
               />
             )}
           </div>

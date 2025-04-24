@@ -24,12 +24,12 @@ export function SidebarRightClickPopup({
     setIsReplyChatOpen,
     isReplyChatOpen,
   } = useStates();
-  console.log(isReplyChatOpen);
 
-  const handleReplyPopup = (e) => {
-    e.stopPropagation();
+  const handleReplyPopup = () => {
+    console.log("DROOTH");
     setIsReplyChatOpen(true);
   };
+  console.log(isReplyChatOpen);
 
   // ..............This is the jsx return part...............//
 
@@ -44,8 +44,8 @@ export function SidebarRightClickPopup({
       }`}
     >
       <button
+        onClick={handleReplyPopup}
         className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]"
-        onClick={(e) => handleReplyPopup(e)}
       >
         <Reply size={16} /> Reply
       </button>
