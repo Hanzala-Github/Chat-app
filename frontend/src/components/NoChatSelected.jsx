@@ -1,7 +1,8 @@
 import React from "react";
 import { MessageSquare } from "lucide-react";
-
-export function NoChatSelected({ handleClosePopup }) {
+import { useFunctions } from "../hooks/useFunctions";
+export function NoChatSelected() {
+  const { handleClosePopup } = useFunctions();
   return (
     <div
       onClick={handleClosePopup}

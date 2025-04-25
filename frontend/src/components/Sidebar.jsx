@@ -4,28 +4,18 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Search, Users } from "lucide-react";
 import { SidebarRightClickPopup, SidebarSkeleton } from "./component";
 import { useStates } from "../store/useStates";
+import { useFunctions } from "../hooks/useFunctions";
 // sidebar component
-
-export const Sidebar = ({
-  handleMouseRight,
-  handleClosePopup,
-  // rightPopUp,
-  // setRightPopUp,
-}) => {
-  const {
-    getUsers,
-    users,
-    selectedUser,
-    setSelectedUser,
-    isUsersLoading,
-    deleteMessagesHistory,
-  } = useChatStore();
+export const Sidebar = () => {
+  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
+    useChatStore();
   const { onlineUsers } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [activeColor, setactiveColor] = useState(false);
   const [searchContacts, setsearchContacts] = useState("");
   const { isMessageHoverPopup, setisShowCloseChat, rightPopUp, setRightPopUp } =
     useStates();
+  const { handleClosePopup, handleMouseRight } = useFunctions();
 
   useEffect(() => {
     getUsers();
@@ -37,17 +27,8 @@ export const Sidebar = ({
         user.fullName?.toLowerCase().includes(searchContacts.toLowerCase())
       );
 
-  const handleDeleteMessagesHis = async (e) => {
-    e.stopPropagation();
-    await deleteMessagesHistory(selectedUser);
-    setRightPopUp(null);
-
-    console.log("called kill");
-  };
-
   const handleSelectUser = (e, userId = null) => {
     e.stopPropagation();
-
     if (selectedUser === userId) {
       setSelectedUser(null);
       setRightPopUp(null);
@@ -133,7 +114,7 @@ export const Sidebar = ({
             {/* Right-click Popup */}
             {!isMessageHoverPopup && rightPopUp?.user._id === user._id && (
               <SidebarRightClickPopup
-                handleDeleteMessagesHis={handleDeleteMessagesHis}
+                // handleDeleteMessagesHis={handleDeleteMessagesHis}
                 handleSelectUser={handleSelectUser}
               />
             )}

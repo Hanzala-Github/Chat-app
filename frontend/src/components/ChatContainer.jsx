@@ -7,11 +7,8 @@ import {
   ChatBubble,
 } from "./component";
 import { useStates } from "../store/useStates";
-
-const ChatContainer = ({
-  handleClosePopup,
-  //  setRightPopUp
-}) => {
+import { useFunctions } from "../hooks/useFunctions";
+const ChatContainer = () => {
   const {
     getMessages,
     isMessagesLoading,
@@ -20,6 +17,7 @@ const ChatContainer = ({
     unsubscribeFromMessages,
   } = useChatStore();
   const { setRightPopUp } = useStates();
+  const { handleClosePopup } = useFunctions();
   useEffect(() => {
     getMessages(selectedUser);
     subscribeToMessages();

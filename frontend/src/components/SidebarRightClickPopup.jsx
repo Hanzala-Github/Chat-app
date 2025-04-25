@@ -11,9 +11,10 @@ import {
   XCircle,
 } from "lucide-react";
 import { useStates } from "../store/useStates";
+import { useFunctions } from "../hooks/useFunctions";
 
 export function SidebarRightClickPopup({
-  handleDeleteMessagesHis,
+  // handleDeleteMessagesHis,
   handleSelectUser,
 }) {
   const {
@@ -24,6 +25,8 @@ export function SidebarRightClickPopup({
     setIsReplyChatOpen,
     isReplyChatOpen,
   } = useStates();
+
+  const { handleDeleteMessagesHis } = useFunctions();
 
   const handleReplyPopup = () => {
     console.log("DROOTH");

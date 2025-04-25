@@ -99,6 +99,7 @@ const sendMessage = async (req, res, next) => {
 
     // Create a new message (single message, no `messages` array)
     const newMessage = await Message.create({
+      senderId,
       receiverId,
       text,
       image: imageUrl,

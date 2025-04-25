@@ -71,7 +71,8 @@ export const useChatStore = create((set, get) => ({
   // ..............sendMessage function..............//
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
-    console.log(messages);
+    // console.log(messages, "HELLO SEND MESSAGE KKKKKK");
+    // console.log(messageData);
 
     try {
       const res = await axios.post(
@@ -79,7 +80,7 @@ export const useChatStore = create((set, get) => ({
         messageData
       );
 
-      // console.log(res?.data?.data);
+      console.log(res?.data?.data);
       set({ messages: [...messages, res?.data?.data] });
       // set((state) => ({ messages: [...state.messages, res?.data?.data] }));
     } catch (error) {

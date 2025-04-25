@@ -159,7 +159,7 @@ export function ChatBubble({ setRightPopUp }) {
   } = useStates();
 
   const messageEndRef = useRef(null);
-  console.log(messages[0]);
+  console.log(messages);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -195,6 +195,7 @@ export function ChatBubble({ setRightPopUp }) {
     setPopupPosition(isUpperHalf ? "bottom" : "top");
   };
 
+  // ...............This is the jsx return part...............//
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4 overflow-x-hidden">
       {messages?.map((message, index) => (
