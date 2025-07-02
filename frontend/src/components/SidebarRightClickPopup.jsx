@@ -1,9 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
+import Picker from "emoji-picker-react";
 import {
   Ban,
   Copy,
   Heart,
+  Plus,
   Reply,
   Save,
   Trash2,
@@ -37,28 +39,40 @@ export function SidebarRightClickPopup({
   // ..............This is the jsx return part...............//
 
   return isMessageHoverPopup ? (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      className={`absolute z-50 bg-[#0d0e10] shadow-lg rounded-lg  w-40 p-2 space-y-2 text-sm 
+    <div className="w-full h-screen fixed top-0 left-0  bg-[#afafaf3e] cursor-pointer z-20">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        className={`relative z-50 bg-[#0d0e10] shadow-lg rounded-lg  w-40 p-2 space-y-2 text-sm 
           ${popupPosition === "top" ? "bottom-full mb-2" : "top-full mt-2"}  ${
-        popupPositionLeftRight === "left" ? "right-[50%]" : "left-[50%]"
-      }`}
-    >
-      <button
-        onClick={handleReplyPopup}
-        className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]"
+          popupPositionLeftRight === "left" ? "right-[50%]" : "left-[50%]"
+        }`}
       >
-        <Reply size={16} /> Reply
-      </button>
-      <button className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]">
-        <Copy size={16} /> Copy
-      </button>
-      <button className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]">
-        <Save size={16} /> Save as
-      </button>
-    </motion.div>
+        <button
+          onClick={handleReplyPopup}
+          className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]"
+        >
+          <Reply size={16} /> Reply
+        </button>
+        <button className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]">
+          <Copy size={16} /> Copy
+        </button>
+        <button className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]">
+          <Save size={16} /> Save as
+        </button>
+        <div className="flex justify-between items-center">
+          {/* //bg-[#b9b8b88e] */}
+          <span className="rounded-full  text-[20px]">👍</span>
+          <span className="rounded-full  text-[20px]">😂</span>
+          <span className="rounded-full  text-[20px]">😢</span>
+          <span className="rounded-full  text-[20px]">❤️</span>
+          <span className="rounded-full  border border-[#cfcfcf33] flex items-center justify-center p-[2px]">
+            <Plus className="size-6" />
+          </span>
+        </div>
+      </motion.div>
+    </div>
   ) : (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
