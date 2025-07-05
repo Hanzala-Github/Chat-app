@@ -16,13 +16,18 @@ const ChatContainer = () => {
     subscribeToMessages,
     unsubscribeFromMessages,
   } = useChatStore();
-  const { setRightPopUp } = useStates();
+  const { setRightPopUp, rightPopUp, storeMessageId } = useStates();
   const { handleClosePopup } = useFunctions();
   useEffect(() => {
     getMessages(selectedUser);
     subscribeToMessages();
     return () => unsubscribeFromMessages();
   }, [selectedUser]);
+
+  const handleOuterClick = (e) => {
+    if (e.target.closest(".popup-content")) return;
+    handleClosePopup(e);
+  };
 
   if (isMessagesLoading) {
     return (
@@ -37,7 +42,7 @@ const ChatContainer = () => {
   // ...............This is the jsx return part...........//
   return (
     <div
-      onClick={(e) => handleClosePopup(e)}
+      onClick={(rightPopUp || storeMessageId) && handleOuterClick}
       className="flex-1 flex flex-col overflow-auto"
     >
       <ChatHeader />

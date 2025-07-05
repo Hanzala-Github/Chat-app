@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { Search, Users } from "lucide-react";
-import { SidebarRightClickPopup, SidebarSkeleton } from "./component";
+import { ChatOptionsPopup, SidebarSkeleton } from "./component";
 import { useStates } from "../store/useStates";
 import { useFunctions } from "../hooks/useFunctions";
 // sidebar component
@@ -13,8 +13,7 @@ export const Sidebar = () => {
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [activeColor, setactiveColor] = useState(false);
   const [searchContacts, setsearchContacts] = useState("");
-  const { isMessageHoverPopup, setisShowCloseChat, rightPopUp, setRightPopUp } =
-    useStates();
+  const { setisShowCloseChat, rightPopUp, setRightPopUp } = useStates();
   const { handleClosePopup, handleMouseRight } = useFunctions();
 
   useEffect(() => {
@@ -112,11 +111,8 @@ export const Sidebar = () => {
           `}
           >
             {/* Right-click Popup */}
-            {!isMessageHoverPopup && rightPopUp?.user._id === user._id && (
-              <SidebarRightClickPopup
-                // handleDeleteMessagesHis={handleDeleteMessagesHis}
-                handleSelectUser={handleSelectUser}
-              />
+            {rightPopUp?.user._id === user._id && (
+              <ChatOptionsPopup handleSelectUser={handleSelectUser} />
             )}
 
             {/* Profile Picture & Online Status */}

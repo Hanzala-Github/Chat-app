@@ -25,4 +25,8 @@ export const useStates = create((set) => ({
   // ...............rightPopUp..................//
   rightPopUp: null,
   setRightPopUp: (value) => set({ rightPopUp: value }),
+
+  // .............storeMessageId....................//
+  storeMessageId: null,
+  setStoreMessageId: (id) => set({ storeMessageId: id }),
 }));

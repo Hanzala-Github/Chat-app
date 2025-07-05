@@ -70,10 +70,15 @@ export const MessageInput = () => {
     setText((prev) => prev + emojiObject.emoji);
   };
 
+  const handleShowPicker = (e) => {
+    e.stopPropagation();
+    setShowPicker((prev) => !prev);
+  };
+
   // ..........This is the jsx return part............//
   return (
     <div className="p-4 w-full flex items-end justify-center relative border-t border-base-300 h-auto flex-col">
-      {isReplyChatOpen && <ReplyChat />}
+      {!!isReplyChatOpen && <ReplyChat />}
 
       {imagePreview && (
         <SelectImagePopup
@@ -97,7 +102,7 @@ export const MessageInput = () => {
           <button
             type="button"
             className="btn btn-sm btn-circle ml-1"
-            onClick={() => setShowPicker((prev) => !prev)}
+            onClick={handleShowPicker}
           >
             <Smile size={22} />
           </button>
@@ -142,8 +147,15 @@ export const MessageInput = () => {
       </form>
 
       {showPicker && (
-        <div className="absolute bottom-14 left-0 z-50">
-          <Picker onEmojiClick={handleEmojiClick} style={{ height: "24rem" }} />
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="absolute bottom-14 left-0 z-50"
+        >
+          <Picker
+            onEmojiClick={handleEmojiClick}
+            style={{ height: "24rem" }}
+            theme="dark"
+          />
         </div>
       )}
     </div>

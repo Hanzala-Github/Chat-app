@@ -6,6 +6,7 @@ export function useFunctions() {
     setIsMessageHoverPopup,
     setisShowCloseChat,
     setPopupPosition,
+    setStoreMessageId,
   } = useStates();
 
   const { selectedUser, deleteMessagesHistory } = useChatStore();
@@ -14,6 +15,7 @@ export function useFunctions() {
   const handleClosePopup = (e) => {
     e.stopPropagation();
     setRightPopUp(null);
+    setStoreMessageId(null);
     setIsMessageHoverPopup(false);
     console.log("Closed the all popups");
   };

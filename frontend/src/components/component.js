@@ -12,3 +12,5 @@ export * from "./ChatBubble";
 export * from "./ReplyChat";
 export * from "./skeletons/SidebarSkeleton";
 export * from "./skeletons/MessageSkeleton";
+export * from "./MessageHoverPopup ";
+export * from "./ChatOptionsPopup";
