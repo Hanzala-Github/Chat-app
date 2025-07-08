@@ -4,10 +4,11 @@ import {
   NoChatSelected,
   Sidebar,
 } from "../components/component";
-import { useChatStore } from "../store/useChatStore";
+// import { useChatStore } from "../store/useChatStore";
+import { ChatView } from "../components/ChatView";
 export const HomePage = () => {
-  const { selectedUser } = useChatStore();
-
+  // const { selectedUser } = useChatStore();
+  console.log("Homeeee");
   // ...............This is the jsx return part............//
   return (
     <div className="h-screen bg-base-200 relative">
@@ -15,8 +16,8 @@ export const HomePage = () => {
         <div className="bg-base-100 rounded-lg shadow-cl w-full max-w-6xl h-[calc(100vh-8rem)]">
           <div className="flex h-full rounded-lg overflow-hidden">
             <Sidebar />
-
-            {!selectedUser ? <NoChatSelected /> : <ChatContainer />}
+            <ChatView />
+            {/* {!selectedUser ? <NoChatSelected /> : <ChatContainer />} */}
           </div>
         </div>
       </div>

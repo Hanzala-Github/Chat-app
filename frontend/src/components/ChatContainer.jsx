@@ -1,5 +1,6 @@
 import { useChatStore } from "../store/useChatStore";
 import React, { useEffect } from "react";
+import { shallow } from "zustand/shallow";
 import {
   ChatHeader,
   MessageInput,
@@ -15,7 +16,16 @@ const ChatContainer = () => {
     selectedUser,
     subscribeToMessages,
     unsubscribeFromMessages,
-  } = useChatStore();
+  } = useChatStore(
+    (state) => ({
+      getMessages: state.getMessages,
+      isMessagesLoading: state.isMessagesLoading,
+      selectedUser: state.selectedUser,
+      subscribeToMessages: state.subscribeToMessages,
+      unsubscribeFromMessages: state.unsubscribeFromMessages,
+    }),
+    shallow
+  );
   const { setRightPopUp, rightPopUp, storeMessageId } = useStates();
   const { handleClosePopup } = useFunctions();
   useEffect(() => {

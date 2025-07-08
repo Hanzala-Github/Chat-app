@@ -7,7 +7,6 @@ export * from "./NoChatSelected";
 export * from "./Sidebar";
 export * from "./SelectImagePopup";
 export * from "./DiscardImagePopup";
-export * from "./SidebarRightClickPopup";
 export * from "./ChatBubble";
 export * from "./ReplyChat";
 export * from "./skeletons/SidebarSkeleton";

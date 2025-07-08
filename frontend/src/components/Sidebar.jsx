@@ -78,6 +78,7 @@ export const Sidebar = () => {
             <input
               type="checkbox"
               checked={showOnlineOnly}
+              onClick={(e) => e.stopPropagation()}
               onChange={(e) => setShowOnlineOnly(e.target.checked)}
               className="checkbox checkbox-sm"
             />

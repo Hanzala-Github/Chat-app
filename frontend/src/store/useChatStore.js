@@ -27,32 +27,6 @@ export const useChatStore = create((set, get) => ({
 
   //   ................getMessages function.................//
 
-  // getMessages: async (userId) => {
-  //   const cachedMessages = get().messagesCache[userId];
-
-  //   if (cachedMessages) {
-  //     set({ messages: cachedMessages });
-  //     return; // Return cached data, no API call
-  //   }
-
-  //   set({ isMessagesLoading: true });
-
-  //   try {
-  //     const res = await axios.get(`/message/${userId}`);
-  //     set((state) => ({
-  //       messages: res?.data?.messages,
-  //       messagesCache: {
-  //         ...state.messagesCache,
-  //         [userId]: res?.data?.messages,
-  //       }, // Store in cache
-  //     }));
-  //   } catch (error) {
-  //     console.error("Error fetching messages:", error);
-  //   } finally {
-  //     set({ isMessagesLoading: false });
-  //   }
-  // },
-
   getMessages: async (userId) => {
     set({ isMessagesLoading: true });
 
@@ -71,9 +45,6 @@ export const useChatStore = create((set, get) => ({
   // ..............sendMessage function..............//
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
-    // console.log(messages, "HELLO SEND MESSAGE KKKKKK");
-    // console.log(messageData);
-
     try {
       const res = await axios.post(
         `/message/send/${selectedUser}`,
