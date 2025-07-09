@@ -1,6 +1,6 @@
 import { useChatStore } from "../store/useChatStore";
 import React, { useEffect } from "react";
-import { shallow } from "zustand/shallow";
+// import { shallow } from "zustand/shallow";
 import {
   ChatHeader,
   MessageInput,
@@ -10,25 +10,17 @@ import {
 import { useStates } from "../store/useStates";
 import { useFunctions } from "../hooks/useFunctions";
 const ChatContainer = () => {
-  const {
-    getMessages,
-    isMessagesLoading,
-    selectedUser,
-    subscribeToMessages,
-    unsubscribeFromMessages,
-  } = useChatStore(
-    (state) => ({
-      getMessages: state.getMessages,
-      isMessagesLoading: state.isMessagesLoading,
-      selectedUser: state.selectedUser,
-      subscribeToMessages: state.subscribeToMessages,
-      unsubscribeFromMessages: state.unsubscribeFromMessages,
-    }),
-    shallow
-  );
+  const selectedUser = useChatStore((state) => state.selectedUser);
+  const isMessagesLoading = useChatStore((state) => state.isMessagesLoading);
+  const getMessages = useChatStore.getState().getMessages;
+  const subscribeToMessages = useChatStore.getState().subscribeToMessages;
+  const unsubscribeFromMessages =
+    useChatStore.getState().unsubscribeFromMessages;
+
   const { setRightPopUp, rightPopUp, storeMessageId } = useStates();
   const { handleClosePopup } = useFunctions();
   useEffect(() => {
+    if (!selectedUser) return;
     getMessages(selectedUser);
     subscribeToMessages();
     return () => unsubscribeFromMessages();
