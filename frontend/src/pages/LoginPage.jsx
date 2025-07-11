@@ -48,7 +48,7 @@ export const LoginPage = () => {
                 <input
                   type="email"
                   className={`input input-bordered w-full`}
-                  placeholder="you@example.com"
+                  placeholder="email"
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })

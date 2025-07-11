@@ -12,7 +12,7 @@ export function SelectImagePopup({
   setText,
   handleSendMessage,
 }) {
-  const { setDiscardImage } = useStates();
+  const setDiscardImage = useStates.getState().setDiscardImage;
 
   // ..................This is the jsx return part....................//
   return (

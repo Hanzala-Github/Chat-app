@@ -5,7 +5,8 @@ import { useStates } from "../store/useStates";
 import { useFunctions } from "../hooks/useFunctions";
 
 export function ChatOptionsPopup({ handleSelectUser }) {
-  const { popupPosition, isShowCloseChat } = useStates();
+  const popupPosition = useStates((state) => state.popupPosition);
+  const isShowCloseChat = useStates((state) => state.isShowCloseChat);
   const { handleDeleteMessagesHis } = useFunctions();
 
   return (

@@ -29,4 +29,7 @@ export const useStates = create((set) => ({
   // .............storeMessageId....................//
   storeMessageId: null,
   setStoreMessageId: (id) => set({ storeMessageId: id }),
+  // .............singleMessageReply....................//
+  singleMessageReply: null,
+  setSingleMessageReply: (singleMessageReply) => set({ singleMessageReply }),
 }));

@@ -9,15 +9,17 @@ import { useStates } from "../store/useStates";
 
 export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   const [openMessagePopup, setOpenMessagePopup] = useState(null);
-  const { users, messages, selectedUser } = useChatStore();
+
+  const users = useChatStore((state) => state.users);
+  const messages = useChatStore((state) => state.messages);
+  const selectedUser = useChatStore((state) => state.selectedUser);
   const { authUser } = useAuthStore();
-  const {
-    setIsMessageHoverPopup,
-    setPopupPosition,
-    setPopupPositionLeftRight,
-    storeMessageId,
-    setStoreMessageId,
-  } = useStates();
+  const storeMessageId = useStates((state) => state.storeMessageId);
+  const setIsMessageHoverPopup = useStates.getState().setIsMessageHoverPopup;
+  const setPopupPosition = useStates.getState().setPopupPosition;
+  const setPopupPositionLeftRight =
+    useStates.getState().setPopupPositionLeftRight;
+  const setStoreMessageId = useStates.getState().setStoreMessageId;
 
   const messageEndRef = useRef(null);
   console.log(messages[0]);

@@ -3,14 +3,19 @@ import { motion } from "framer-motion";
 import { Reply, Copy, Save, Plus } from "lucide-react";
 import { useStates } from "../store/useStates";
 import Picker from "emoji-picker-react";
+import { useChatStore } from "../store/useChatStore";
 
 export function MessageHoverPopup() {
-  const {
-    popupPosition,
-    popupPositionLeftRight,
-    setIsReplyChatOpen,
-    setStoreMessageId,
-  } = useStates();
+  const messages = useChatStore((state) => state.messages);
+  const popupPosition = useStates((state) => state.popupPosition);
+  const popupPositionLeftRight = useStates(
+    (state) => state.popupPositionLeftRight
+  );
+  const storeMessageId = useStates((state) => state.storeMessageId);
+  const setSingleMessageReply = useStates.getState().setSingleMessageReply;
+  const setIsReplyChatOpen = useStates.getState().setSingleMessageReply;
+  const setStoreMessageId = useStates.getState().setSingleMessageReply;
+
   const [showPicker, setShowPicker] = useState(false);
 
   const handleReplyPopup = (e) => {
@@ -18,6 +23,7 @@ export function MessageHoverPopup() {
     e.stopPropagation();
     setIsReplyChatOpen(true);
     setStoreMessageId(null);
+    setSingleMessageReply(messages.filter((msg) => msg._id === storeMessageId));
   };
 
   return (

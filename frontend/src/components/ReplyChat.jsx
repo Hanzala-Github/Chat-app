@@ -1,9 +1,11 @@
-import { X } from "lucide-react";
 import React from "react";
+import { X } from "lucide-react";
 import { useStates } from "../store/useStates";
 
 export function ReplyChat() {
-  const { setIsReplyChatOpen } = useStates();
+  const setIsReplyChatOpen = useStates.getState().setIsReplyChatOpen;
+  const singleMessageReply = useStates((state) => state.singleMessageReply);
+  console.log(singleMessageReply[0]?.text);
 
   // ...............This is the jsx return part.............//
   return (
@@ -16,12 +18,13 @@ export function ReplyChat() {
           className="w-9 h-9 rounded-full object-cover"
         />
         <p className="text-[12px] w-full line-clamp-2">
-          Hello my name is hanzala and what is your name and what is your school
+          {/* Hello my name is hanzala and what is your name and what is your school
           name and is hanzala and what is your name and what is your school what
           is your name and what is your school name and is hanzala and what is
           your name and what is your school and is hanzala and what is your name
           and what is your school what is your name and what is your school name
-          and is hanzala and what is your name and what is your school
+          and is hanzala and what is your name and what is your school */}
+          {singleMessageReply[0]?.text}
         </p>
       </div>
 
@@ -29,7 +32,10 @@ export function ReplyChat() {
       <div className="flex items-center justify-end  h-full w-[12%]">
         {/* Reply image (square) */}
         <img
-          src="https://plus.unsplash.com/premium_photo-1744805464532-998bee603eae?q=80&w=1974"
+          src={
+            singleMessageReply[0]?.image ||
+            "https://plus.unsplash.com/premium_photo-1744805464532-998bee603eae?q=80&w=1974"
+          }
           alt="reply"
           className="w-[50px] h-[90%] object-cover rounded-md"
         />

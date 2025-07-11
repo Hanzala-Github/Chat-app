@@ -14,8 +14,9 @@ export const MessageInput = () => {
   const [showPicker, setShowPicker] = useState(false);
   const [inputDisabled, setinputDisabled] = useState(false);
   const fileInputRef = useRef(null);
-  const { sendMessage } = useChatStore();
-  const { discardImage, isReplyChatOpen } = useStates();
+  const sendMessage = useChatStore.getState().sendMessage;
+  const discardImage = useStates((state) => state.discardImage);
+  const isReplyChatOpen = useStates((state) => state.isReplyChatOpen);
   // setUpdateMessagesArray
   useEffect(() => {
     if (imagePreview) {

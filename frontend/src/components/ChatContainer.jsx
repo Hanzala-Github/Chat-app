@@ -16,8 +16,9 @@ const ChatContainer = () => {
   const subscribeToMessages = useChatStore.getState().subscribeToMessages;
   const unsubscribeFromMessages =
     useChatStore.getState().unsubscribeFromMessages;
-
-  const { setRightPopUp, rightPopUp, storeMessageId } = useStates();
+  const setRightPopUp = useStates.getState().setRightPopUp;
+  const rightPopUp = useStates((state) => state.rightPopUp);
+  const storeMessageId = useStates((state) => state.storeMessageId);
   const { handleClosePopup } = useFunctions();
   useEffect(() => {
     if (!selectedUser) return;

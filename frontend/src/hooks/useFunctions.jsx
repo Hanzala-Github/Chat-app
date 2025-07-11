@@ -1,15 +1,14 @@
 import { useChatStore } from "../store/useChatStore";
 import { useStates } from "../store/useStates";
 export function useFunctions() {
-  const {
-    setRightPopUp,
-    setIsMessageHoverPopup,
-    setisShowCloseChat,
-    setPopupPosition,
-    setStoreMessageId,
-  } = useStates();
+  const setRightPopUp = useStates.getState().setRightPopUp;
+  const setIsMessageHoverPopup = useStates.getState().setIsMessageHoverPopup;
+  const setisShowCloseChat = useStates.getState().setisShowCloseChat;
+  const setPopupPosition = useStates.getState().setPopupPosition;
+  const setStoreMessageId = useStates.getState().setStoreMessageId;
+  const selectedUser = useChatStore.getState().selectedUser;
 
-  const { selectedUser, deleteMessagesHistory } = useChatStore();
+  const deleteMessagesHistory = useChatStore.getState().deleteMessagesHistory;
 
   // ...........handleClosePopup............//
   const handleClosePopup = (e) => {
