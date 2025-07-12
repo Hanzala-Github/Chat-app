@@ -13,8 +13,8 @@ export function MessageHoverPopup() {
   );
   const storeMessageId = useStates((state) => state.storeMessageId);
   const setSingleMessageReply = useStates.getState().setSingleMessageReply;
-  const setIsReplyChatOpen = useStates.getState().setSingleMessageReply;
-  const setStoreMessageId = useStates.getState().setSingleMessageReply;
+  const setIsReplyChatOpen = useStates.getState().setIsReplyChatOpen;
+  const setStoreMessageId = useStates.getState().setStoreMessageId;
 
   const [showPicker, setShowPicker] = useState(false);
 

@@ -1,11 +1,17 @@
 import React from "react";
 import { X } from "lucide-react";
 import { useStates } from "../store/useStates";
+import { useAuthStore } from "../store/useAuthStore";
+import { useChatStore } from "../store/useChatStore";
 
 export function ReplyChat() {
+  const authUser = useAuthStore((state) => state.authUser);
+  const users = useChatStore((state) => state.users);
+  const messages = useChatStore((state) => state.messages);
+  const selectedUser = useChatStore((state) => state.selectedUser);
   const setIsReplyChatOpen = useStates.getState().setIsReplyChatOpen;
   const singleMessageReply = useStates((state) => state.singleMessageReply);
-  console.log(singleMessageReply[0]?.text);
+  console.log(singleMessageReply);
 
   // ...............This is the jsx return part.............//
   return (
@@ -13,7 +19,21 @@ export function ReplyChat() {
       {/* Left side: User avatar */}
       <div className="flex items-center justify-center w-[88%] gap-2">
         <img
-          src="https://plus.unsplash.com/premium_photo-1744805464532-998bee603eae?q=80&w=1974"
+          //       message.receiverId === selectedUser
+          // ? authUser?.profilePic || "/avatar.png"
+          // : users?.find((user) => user?._id === selectedUser)?.profilePic ||
+          //   "/avatar.png"
+          // src={
+          //   authUser.profilePic ||
+          //   "https://plus.unsplash.com/premium_photo-1744805464532-998bee603eae?q=80&w=1974"
+          // }
+          src={
+            singleMessageReply[0].senderId === selectedUser
+              ? authUser.profilePic
+              : users.find(
+                  (user) => user._id === singleMessageReply[0].receiverId
+                )?.profilePic
+          }
           alt="avatar"
           className="w-9 h-9 rounded-full object-cover"
         />

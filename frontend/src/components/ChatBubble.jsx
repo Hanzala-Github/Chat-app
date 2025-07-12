@@ -13,7 +13,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   const users = useChatStore((state) => state.users);
   const messages = useChatStore((state) => state.messages);
   const selectedUser = useChatStore((state) => state.selectedUser);
-  const { authUser } = useAuthStore();
+  const authUser = useAuthStore((state) => state.authUser);
   const storeMessageId = useStates((state) => state.storeMessageId);
   const setIsMessageHoverPopup = useStates.getState().setIsMessageHoverPopup;
   const setPopupPosition = useStates.getState().setPopupPosition;
@@ -104,14 +104,15 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
               }`}
               style={{ transition: "all 0.8s" }}
             >
+              {/* {console.log(message)} */}
               {message.image && (
                 <img
                   src={message?.image}
                   alt="Attachment"
-                  className="sm:max-w-[200px] rounded-md mb-2"
+                  className="sm:max-w-[200px] md:w-[350px] rounded-md mb-2"
                 />
               )}
-              {message.text && <p>{message.text}</p>}
+              {message.text && <p className="leading-none">{message.text}</p>}
 
               {message?._id === storeMessageId && <MessageHoverPopup />}
             </div>
