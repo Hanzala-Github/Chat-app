@@ -38,6 +38,7 @@ export function useFunctions() {
     } else {
       setisShowCloseChat(true);
     }
+    setStoreMessageId(null);
 
     console.log(user?._id);
     const rect = e.target.getBoundingClientRect();

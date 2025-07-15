@@ -7,13 +7,28 @@ import { useStates } from "../store/useStates";
 import { useFunctions } from "../hooks/useFunctions";
 // sidebar component
 export const Sidebar = () => {
-  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
-    useChatStore();
-  const { onlineUsers } = useAuthStore();
+  // const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
+  //   useChatStore();
+  // const { onlineUsers } = useAuthStore();
+  // const { setisShowCloseChat, rightPopUp, setRightPopUp } = useStates();
+
+  const getUsers = useChatStore.getState().getUsers;
+  const setSelectedUser = useChatStore.getState().setSelectedUser;
+  const users = useChatStore((state) => state.users);
+  const selectedUser = useChatStore((state) => state.selectedUser);
+  const isUsersLoading = useChatStore((state) => state.isUsersLoading);
+
+  const onlineUsers = useAuthStore((state) => state.onlineUsers);
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [activeColor, setactiveColor] = useState(false);
   const [searchContacts, setsearchContacts] = useState("");
-  const { setisShowCloseChat, rightPopUp, setRightPopUp } = useStates();
+
+  const setisShowCloseChat = useStates.getState().setisShowCloseChat;
+
+  const setRightPopUp = useStates.getState().setRightPopUp;
+
+  const rightPopUp = useStates((state) => state.rightPopUp);
+
   const { handleClosePopup, handleMouseRight } = useFunctions();
 
   useEffect(() => {

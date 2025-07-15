@@ -32,7 +32,7 @@ export function MessageHoverPopup() {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       className={`popup-content absolute z-50 bg-[#0d0e10] shadow-lg rounded-lg w-40 p-2 space-y-2 text-sm
-        ${popupPosition === "top" ? "bottom-full mb-2" : "top-full mt-2"} 
+        ${popupPosition === "top" ? "bottom-[55%] mb-2" : "top-[55%] mt-2"} 
         ${popupPositionLeftRight === "left" ? "right-[50%]" : "left-[50%]"}`}
     >
       <button
