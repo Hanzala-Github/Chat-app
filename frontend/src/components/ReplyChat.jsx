@@ -37,13 +37,7 @@ export function ReplyChat() {
           alt="avatar"
           className="w-9 h-9 rounded-full object-cover"
         />
-        <p className="text-[12px] w-full line-clamp-2">
-          {/* Hello my name is hanzala and what is your name and what is your school
-          name and is hanzala and what is your name and what is your school what
-          is your name and what is your school name and is hanzala and what is
-          your name and what is your school and is hanzala and what is your name
-          and what is your school what is your name and what is your school name
-          and is hanzala and what is your name and what is your school */}
+        <p className="text-[12px] w-full line-clamp-2 break-words">
           {singleMessageReply[0]?.text}
         </p>
       </div>

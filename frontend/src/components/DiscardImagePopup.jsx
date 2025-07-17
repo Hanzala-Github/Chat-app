@@ -2,7 +2,7 @@ import React from "react";
 import { useStates } from "../store/useStates";
 
 export function DiscardImagePopup({ setImagePreview }) {
-  const { setDiscardImage } = useStates();
+  const setDiscardImage = useStates.getState().setDiscardImage;
 
   const handleImageDiscard = () => {
     setDiscardImage(false);

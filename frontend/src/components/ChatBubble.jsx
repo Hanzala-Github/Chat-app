@@ -246,7 +246,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
           >
             <div
               ref={(el) => (bubbleRefs.current[message._id] = el)}
-              className={`max-w-[350px] chat-bubble flex flex-col overflow-y-visible break-words whitespace-pre-wrap transition-all ${
+              className={`max-w-[350px]  chat-bubble flex flex-col overflow-y-visible break-words whitespace-pre-wrap transition-all ${
                 message.senderId === authUser?._id
                   ? "bg-[#5251D4]"
                   : "bg-gray-600"
@@ -257,7 +257,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
                 <img
                   src={message?.image}
                   alt="Attachment"
-                  className="sm:max-w-[200px] md:w-[350px] rounded-md mb-2"
+                  className="sm:max-w-[350px]  rounded-md mb-2"
                 />
               )}
               {message.text && <p className="leading-none">{message.text}</p>}

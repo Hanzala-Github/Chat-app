@@ -9,7 +9,10 @@ export const LoginPage = () => {
     email: "",
     password: "",
   });
-  const { login, isLoggingIn } = useAuthStore();
+  // const { login, isLoggingIn } = useAuthStore();
+
+  const login = useAuthStore.getState().login;
+  const isLoggingIn = useAuthStore((state) => state.isLoggingIn);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

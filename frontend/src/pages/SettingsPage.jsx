@@ -12,7 +12,10 @@ const PREVIEW_MESSAGES = [
 ];
 
 export const SettingsPage = () => {
-  const { theme, setTheme } = useThemeStore();
+  // const { theme, setTheme } = useThemeStore();
+
+  const theme = useThemeStore((state) => state.theme);
+  const setTheme = useThemeStore.getState().setTheme;
 
   // ............This is the jsx return part.........../
   return (
