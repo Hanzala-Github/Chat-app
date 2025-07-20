@@ -28,6 +28,8 @@ export const Sidebar = () => {
   const setRightPopUp = useStates.getState().setRightPopUp;
 
   const rightPopUp = useStates((state) => state.rightPopUp);
+  const setSingleMessageReply = useStates.getState().setSingleMessageReply;
+  const setIsReplyChatOpen = useStates.getState().setIsReplyChatOpen;
 
   const { handleClosePopup, handleMouseRight } = useFunctions();
 
@@ -48,6 +50,8 @@ export const Sidebar = () => {
       setRightPopUp(null);
     } else {
       setSelectedUser(userId);
+      setSingleMessageReply(null);
+      setIsReplyChatOpen(false);
       setRightPopUp(null);
       if (userId === userId) {
         setisShowCloseChat(true);
