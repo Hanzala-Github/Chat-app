@@ -17,6 +17,11 @@ export const MessageInput = () => {
   const sendMessage = useChatStore.getState().sendMessage;
   const discardImage = useStates((state) => state.discardImage);
   const isReplyChatOpen = useStates((state) => state.isReplyChatOpen);
+  const setSingleMessageReply = useStates.getState().setSingleMessageReply;
+  const setIsReplyChatOpen = useStates.getState().setIsReplyChatOpen;
+  const storeMessageIdOnReplyMessage = useStates(
+    (state) => state.storeMessageIdOnReplyMessage
+  );
   // setUpdateMessagesArray
   useEffect(() => {
     if (imagePreview) {
@@ -56,6 +61,10 @@ export const MessageInput = () => {
       await sendMessage({
         text: text.trim(),
         image: imagePreview,
+        ...(storeMessageIdOnReplyMessage && {
+          isReply: true,
+          replyTo: storeMessageIdOnReplyMessage,
+        }),
       });
 
       // Clear form
@@ -137,7 +146,11 @@ export const MessageInput = () => {
         </div>
         {(text.length > 0 || imagePreview) && (
           <button
-            onClick={() => setShowPicker(false)}
+            onClick={() => {
+              setShowPicker(false);
+              setSingleMessageReply(null);
+              setIsReplyChatOpen(false);
+            }}
             type="submit"
             className="btn btn-sm btn-circle"
             disabled={!text.trim() && !imagePreview}

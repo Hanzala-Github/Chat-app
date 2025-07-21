@@ -49,6 +49,7 @@ const getMessages = async (req, res) => {
       deletedBy: { $ne: myId },
     })
       .sort({ createdAt: 1 })
+      .populate("replyTo") //this line is new
       .lean();
 
     return res.status(200).json({
@@ -69,7 +70,7 @@ const getMessages = async (req, res) => {
 const sendMessage = async (req, res, next) => {
   const { id: receiverId } = req.params;
   const senderId = req.user?._id;
-  const { text, image } = req.body;
+  const { text, image, isReply, replyTo } = req.body;
 
   try {
     if (!senderId) {
@@ -103,19 +104,26 @@ const sendMessage = async (req, res, next) => {
       receiverId,
       text,
       image: imageUrl,
+      isReply,
+      replyTo,
     });
+    // Optional: Populate replyTo so frontend instantly receives full reply message
+    await newMessage.populate("replyTo");
 
     // Emit real-time event via Socket.IO
     const receiverSocketId = getReceiverSocketId(receiverId);
+    // if (receiverSocketId) {
+    //   io.to(receiverSocketId).emit("newMessage", {
+    //     _id: newMessage._id,
+    //     senderId: newMessage.senderId,
+    //     receiverId: newMessage.receiverId,
+    //     text: newMessage.text,
+    //     image: newMessage?.image,
+    //     createdAt: newMessage.createdAt,
+    //   });
+    // }
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", {
-        _id: newMessage._id,
-        senderId: newMessage.senderId,
-        receiverId: newMessage.receiverId,
-        text: newMessage.text,
-        image: newMessage?.image,
-        createdAt: newMessage.createdAt,
-      });
+      io.to(receiverSocketId).emit("newMessage", newMessage);
     }
 
     return res.status(201).json({

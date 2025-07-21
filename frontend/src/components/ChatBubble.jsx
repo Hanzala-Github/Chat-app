@@ -158,7 +158,6 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   const selectedUser = useChatStore((state) => state.selectedUser);
   const authUser = useAuthStore((state) => state.authUser);
   const storeMessageId = useStates((state) => state.storeMessageId);
-  const singleMessageReply = useStates((state) => state.singleMessageReply);
   const setIsMessageHoverPopup = useStates.getState().setIsMessageHoverPopup;
   const setPopupPosition = useStates.getState().setPopupPosition;
   const setPopupPositionLeftRight =
@@ -168,6 +167,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   const messageEndRef = useRef(null);
   const bubbleRefs = useRef({});
 
+  console.log(messages);
   console.log("ChatBubble re-render");
 
   useEffect(() => {
@@ -208,6 +208,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
     setPopupPosition(isUpperHalf ? "bottom" : "top");
   };
 
+  // ................This is the jsx return part.................//
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4 overflow-x-hidden">
       {messages?.map((message, index) => (
@@ -254,17 +255,16 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
               }`}
               style={{ transition: "all 0.8s" }}
             >
-              {!!singleMessageReply && (
+              {!!message.isReply && (
                 <div className="border-l-[#a4a4f0] border-l-[5px] rounded-[5px] flex items-center justify-between gap-2 w-full my-2 py-2 px-2 bg-[#6767db7d]">
                   <span className="">
                     <img
                       className="w-8 h-6 rounded-full object-cover "
                       src={
-                        singleMessageReply[0]?.receiverId === selectedUser
+                        message.replyTo?.receiverId === selectedUser
                           ? authUser.profilePic
                           : users.find(
-                              (user) =>
-                                user._id === singleMessageReply[0].senderId
+                              (user) => user._id === message.replyTo?.senderId
                             )?.profilePic
                       }
                       alt=""
@@ -272,16 +272,18 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
                   </span>
 
                   <span className="text-[12px] w-full line-clamp-2 break-words">
-                    {singleMessageReply[0]?.text}
+                    {message.replyTo?.text}
                   </span>
 
-                  <span>
-                    <img
-                      className="w-[60px] h-[46px] object-cover rounded-md"
-                      src={singleMessageReply[0]?.image}
-                      alt=""
-                    />
-                  </span>
+                  {!!message.replyTo.image && (
+                    <span>
+                      <img
+                        className="w-[60px] h-[46px] object-cover rounded-md"
+                        src={message.replyTo?.image}
+                        alt=""
+                      />
+                    </span>
+                  )}
                 </div>
               )}
 

@@ -45,14 +45,13 @@ export function ReplyChat() {
       {/* Right side: Reply image + Close button */}
       <div className="flex items-center justify-end  h-full w-[12%]">
         {/* Reply image (square) */}
-        <img
-          src={
-            singleMessageReply[0]?.image ||
-            "https://plus.unsplash.com/premium_photo-1744805464532-998bee603eae?q=80&w=1974"
-          }
-          alt="reply"
-          className="w-[50px] h-[90%] object-cover rounded-md"
-        />
+        {!!singleMessageReply[0]?.image && (
+          <img
+            src={singleMessageReply[0]?.image}
+            alt="reply"
+            className="w-[50px] h-[90%] object-cover rounded-md"
+          />
+        )}
 
         {/* Close button */}
         <span

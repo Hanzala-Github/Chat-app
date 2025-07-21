@@ -76,6 +76,8 @@ export function MessageHoverPopup() {
   const setSingleMessageReply = useStates.getState().setSingleMessageReply;
   const setIsReplyChatOpen = useStates.getState().setIsReplyChatOpen;
   const setStoreMessageId = useStates.getState().setStoreMessageId;
+  const setStoreMessageIdOnReplyMessage =
+    useStates.getState().setStoreMessageIdOnReplyMessage;
 
   const [showPicker, setShowPicker] = useState(false);
 
@@ -83,9 +85,12 @@ export function MessageHoverPopup() {
     e.preventDefault();
     e.stopPropagation();
     setIsReplyChatOpen(true);
+    setStoreMessageIdOnReplyMessage(storeMessageId);
     setStoreMessageId(null);
     setSingleMessageReply(messages.filter((msg) => msg._id === storeMessageId));
   };
+
+  // ...................This is the jsx return part.................//
 
   return (
     <motion.div
