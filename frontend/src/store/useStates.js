@@ -36,4 +36,8 @@ export const useStates = create((set) => ({
   storeMessageIdOnReplyMessage: null,
   setStoreMessageIdOnReplyMessage: (id) =>
     set({ storeMessageIdOnReplyMessage: id }),
+
+  // .............showPicker...................//
+  showPicker: false,
+  setShowPicker: () => set((state) => ({ showPicker: !state.showPicker })),
 }));

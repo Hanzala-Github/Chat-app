@@ -7,11 +7,12 @@ import { SelectImagePopup } from "./SelectImagePopup";
 import { DiscardImagePopup } from "./DiscardImagePopup";
 import { useStates } from "../store/useStates";
 import { ReplyChat } from "./ReplyChat";
+import { useFunctions } from "../hooks/useFunctions";
 
 export const MessageInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
-  const [showPicker, setShowPicker] = useState(false);
+  // const [showPicker, setShowPicker] = useState(false);
   const [inputDisabled, setinputDisabled] = useState(false);
   const fileInputRef = useRef(null);
   const sendMessage = useChatStore.getState().sendMessage;
@@ -22,6 +23,11 @@ export const MessageInput = () => {
   const storeMessageIdOnReplyMessage = useStates(
     (state) => state.storeMessageIdOnReplyMessage
   );
+
+  const setShowPicker = useStates.getState().setShowPicker;
+  const showPicker = useStates((state) => state.showPicker);
+  const { handleShowPicker } = useFunctions();
+
   // setUpdateMessagesArray
   useEffect(() => {
     if (imagePreview) {
@@ -80,10 +86,10 @@ export const MessageInput = () => {
     setText((prev) => prev + emojiObject.emoji);
   };
 
-  const handleShowPicker = (e) => {
-    e.stopPropagation();
-    setShowPicker((prev) => !prev);
-  };
+  // const handleShowPicker = (e) => {
+  //   e.stopPropagation();
+  //   setShowPicker((prev) => !prev);
+  // };
 
   // ..........This is the jsx return part............//
   return (

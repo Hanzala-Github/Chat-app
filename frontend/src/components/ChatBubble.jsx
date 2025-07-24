@@ -294,7 +294,9 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
                   className="sm:max-w-[350px]  rounded-md mb-2"
                 />
               )}
-              {message.text && <p className="leading-none">{message.text}</p>}
+              {message.text && (
+                <p className="leading-none text-[15px]">{message.text}</p>
+              )}
 
               {message?._id === storeMessageId && <MessageHoverPopup />}
             </div>

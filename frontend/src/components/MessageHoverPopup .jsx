@@ -59,12 +59,14 @@
 //     </motion.div>
 //   );
 // }
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { Reply, Copy, Save, Plus } from "lucide-react";
 import { useStates } from "../store/useStates";
-import Picker from "emoji-picker-react";
+// import Picker from "emoji-picker-react";
 import { useChatStore } from "../store/useChatStore";
+import toast from "react-hot-toast";
+import { useFunctions } from "../hooks/useFunctions";
 
 export function MessageHoverPopup() {
   const messages = useChatStore((state) => state.messages);
@@ -78,8 +80,10 @@ export function MessageHoverPopup() {
   const setStoreMessageId = useStates.getState().setStoreMessageId;
   const setStoreMessageIdOnReplyMessage =
     useStates.getState().setStoreMessageIdOnReplyMessage;
+  const { handleShowPicker } = useFunctions();
+  // const setShowPicker = useStates.getState().setShowPicker;
 
-  const [showPicker, setShowPicker] = useState(false);
+  // const [showPicker, setShowPicker] = useState(false);
 
   const handleReplyPopup = (e) => {
     e.preventDefault();
@@ -88,6 +92,22 @@ export function MessageHoverPopup() {
     setStoreMessageIdOnReplyMessage(storeMessageId);
     setStoreMessageId(null);
     setSingleMessageReply(messages.filter((msg) => msg._id === storeMessageId));
+  };
+
+  const handleCopy = async (e) => {
+    e.stopPropagation();
+    try {
+      const text = messages.filter((msg) => msg._id === storeMessageId)?.[0]
+        ?.text;
+
+      await navigator.clipboard.writeText(text);
+      toast.success("message text copied");
+      // You can also show a toast or tooltip here
+    } catch (err) {
+      console.error("Failed to copy!", err);
+    } finally {
+      setStoreMessageId(null);
+    }
   };
 
   // ...................This is the jsx return part.................//
@@ -107,7 +127,10 @@ export function MessageHoverPopup() {
       >
         <Reply size={16} /> Reply
       </button>
-      <button className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]">
+      <button
+        onClick={handleCopy}
+        className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]"
+      >
         <Copy size={16} /> Copy
       </button>
       <button className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]">
@@ -118,7 +141,13 @@ export function MessageHoverPopup() {
         <span className="text-[20px]">😂</span>
         <span className="text-[20px]">😢</span>
         <span className="text-[20px]">❤️</span>
-        <span className="text-[20px] border border-[#cfcfcf33] p-[2px]">
+        <span
+          onClick={(e) => {
+            handleShowPicker(e);
+            setStoreMessageId(null);
+          }}
+          className="text-[20px] border border-[#cfcfcf33] p-[2px]"
+        >
           <Plus className="size-4 text-gray-300" />
         </span>
       </div>

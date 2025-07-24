@@ -10,6 +10,7 @@ export function ChatOptionsPopup({ handleSelectUser }) {
   const { handleDeleteMessagesHis } = useFunctions();
 
   return (
+    // <div className="w-full h-screen bg-[#4d484848] fixed top-0 left-0 ">
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -44,5 +45,6 @@ export function ChatOptionsPopup({ handleSelectUser }) {
         </button>
       )}
     </motion.div>
+    // </div>
   );
 }

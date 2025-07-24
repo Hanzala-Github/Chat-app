@@ -7,8 +7,9 @@ export function useFunctions() {
   const setPopupPosition = useStates.getState().setPopupPosition;
   const setStoreMessageId = useStates.getState().setStoreMessageId;
   const selectedUser = useChatStore.getState().selectedUser;
-
   const deleteMessagesHistory = useChatStore.getState().deleteMessagesHistory;
+
+  const setShowPicker = useStates.getState().setShowPicker;
 
   // ...........handleClosePopup............//
   const handleClosePopup = (e) => {
@@ -53,6 +54,16 @@ export function useFunctions() {
     });
   };
 
+  // ..................handleShowPicker..............//
+  const handleShowPicker = (e) => {
+    e.stopPropagation();
+    setShowPicker((prev) => !prev);
+  };
   // ..............return functions................//
-  return { handleClosePopup, handleDeleteMessagesHis, handleMouseRight };
+  return {
+    handleClosePopup,
+    handleDeleteMessagesHis,
+    handleMouseRight,
+    handleShowPicker,
+  };
 }
