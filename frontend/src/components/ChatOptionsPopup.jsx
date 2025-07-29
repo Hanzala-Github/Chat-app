@@ -30,7 +30,7 @@ export function ChatOptionsPopup({ handleSelectUser }) {
       <button className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]">
         <Heart size={16} /> Add to favorites
       </button>
-      <button className="flex items-center gap-2 w-full px-2 py-1 text-red-500 hover:bg-[#22262d] rounded-[5px]">
+      <button className="flex items-center gap-2 w-full px-2 py-1 text-red-500 hover:bg-[#22262d] rounded-[5px] border-b border-b-[#5857575b] pb-3.5">
         <Ban size={16} /> Block User
       </button>
       <button className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]">

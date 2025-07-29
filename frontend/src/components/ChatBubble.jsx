@@ -144,7 +144,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronDown, Smile } from "lucide-react";
 import { formatMessageTime } from "../lib/utils";
-import { MessageHoverPopup } from "./component";
+import { MessageDeletePopup, MessageHoverPopup } from "./component";
 
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
@@ -211,6 +211,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   // ................This is the jsx return part.................//
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4 overflow-x-hidden">
+      {<MessageDeletePopup />}
       {messages?.map((message, index) => (
         <div
           key={message?._id}
