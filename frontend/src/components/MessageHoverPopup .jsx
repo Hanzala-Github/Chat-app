@@ -5,6 +5,7 @@ import { useStates } from "../store/useStates";
 import { useChatStore } from "../store/useChatStore";
 import toast from "react-hot-toast";
 import { useFunctions } from "../hooks/useFunctions";
+import { useAuthStore } from "../store/useAuthStore";
 
 export function MessageHoverPopup() {
   const messages = useChatStore((state) => state.messages);
@@ -18,6 +19,13 @@ export function MessageHoverPopup() {
   const setStoreMessageId = useStates.getState().setStoreMessageId;
   const setStoreMessageIdOnReplyMessage =
     useStates.getState().setStoreMessageIdOnReplyMessage;
+  const setShowDeletePopup = useStates.getState().setShowDeletePopup;
+  const authUser = useAuthStore((state) => state.authUser);
+  console.log(authUser);
+  const findMsg = messages.filter((msg) => msg._id === storeMessageId);
+
+  // console.log(findMsg);
+
   const { handleShowPicker } = useFunctions();
 
   const handleReplyPopup = (e) => {
@@ -26,7 +34,8 @@ export function MessageHoverPopup() {
     setIsReplyChatOpen(true);
     setStoreMessageIdOnReplyMessage(storeMessageId);
     setStoreMessageId(null);
-    setSingleMessageReply(messages.filter((msg) => msg._id === storeMessageId));
+    // setSingleMessageReply(messages.filter((msg) => msg._id === storeMessageId));
+    setSingleMessageReply(findMsg);
   };
 
   const handleCopy = async (e) => {
@@ -43,6 +52,11 @@ export function MessageHoverPopup() {
     } finally {
       setStoreMessageId(null);
     }
+  };
+
+  const handleDelete = () => {
+    setShowDeletePopup(true);
+    setStoreMessageId(null);
   };
 
   // ...................This is the jsx return part.................//
@@ -69,8 +83,12 @@ export function MessageHoverPopup() {
         <Copy size={16} /> Copy
       </button>
 
-      <button className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]">
-        <Trash2 size={16} /> Delete
+      <button
+        onClick={handleDelete}
+        className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]"
+      >
+        <Trash2 size={16} />
+        {findMsg?.senderId === authUser?._id ? "Delete" : "Delete for me"}
       </button>
       <button className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px] border-b border-b-[#5857575b] pb-3.5">
         <Save size={16} /> Save as

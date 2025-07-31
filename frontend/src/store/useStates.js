@@ -40,4 +40,8 @@ export const useStates = create((set) => ({
   // .............showPicker...................//
   showPicker: false,
   setShowPicker: () => set((state) => ({ showPicker: !state.showPicker })),
+
+  // .................showDeletePopup......................//
+  showDeletePopup: false,
+  setShowDeletePopup: (showDeletePopup) => set({ showDeletePopup }),
 }));

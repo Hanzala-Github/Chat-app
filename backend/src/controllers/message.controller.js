@@ -167,5 +167,18 @@ const deleteMessagesHistory = async (req, res) => {
   }
 };
 
+// ..................deleteSingleMessage....................//
+const deleteMessageForMeOrEveryOne = async (req, res) => {
+  const { id } = req.params;
+
+  // isDeleteForMe
+};
+
 // .........export........//
-export { getUsersForSidebar, getMessages, sendMessage, deleteMessagesHistory };
+export {
+  getUsersForSidebar,
+  getMessages,
+  sendMessage,
+  deleteMessagesHistory,
+  deleteMessageForMeOrEveryOne,
+};

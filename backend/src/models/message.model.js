@@ -75,6 +75,10 @@ const messageSchema = new Schema(
       type: [String],
       default: [],
     },
+    isDeleteForMe: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

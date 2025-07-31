@@ -164,6 +164,8 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
     useStates.getState().setPopupPositionLeftRight;
   const setStoreMessageId = useStates.getState().setStoreMessageId;
 
+  const showDeletePopup = useStates((state) => state.showDeletePopup);
+
   const messageEndRef = useRef(null);
   const bubbleRefs = useRef({});
 
@@ -211,7 +213,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   // ................This is the jsx return part.................//
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4 overflow-x-hidden">
-      {<MessageDeletePopup />}
+      {showDeletePopup && <MessageDeletePopup />}
       {messages?.map((message, index) => (
         <div
           key={message?._id}

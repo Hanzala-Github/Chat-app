@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { useStates } from "../store/useStates";
 
 export function MessageDeletePopup() {
   const [deleteMessage, setDeleteMessage] = useState(false);
-  //   const radioClass = `appearance-none w-4 h-4 rounded-full scale-[1.4] border border-gray-500 ${
-  //     deleteMessage
-  //       ? "checked:bg-[#232325] checked:border-gray-500"
-  //       : "checked:bg-[#0e0e0f] checked:border-red-400 checked:border-4"
-  //   }`;
+  const setShowDeletePopup = useStates.getState().setShowDeletePopup;
   const radioClass = `appearance-none w-4 h-4 rounded-full scale-[1.4] border border-gray-500
   ${
     deleteMessage
@@ -28,35 +25,17 @@ export function MessageDeletePopup() {
           </div>
           <div className="space-y-3">
             <label className="flex items-center gap-2.5">
-              {/* <input type="radio" className="scale-[1.4] bg-[#161617]" />{" "} */}
               <input
                 type="radio"
                 onChange={() => setDeleteMessage(true)}
                 name="Delete"
-                // className={`appearance-none w-4 h-4 rounded-full ${
-                //   deleteMessage ? "bg-[#0e0e0f]" : "bg-[#232325]"
-                // }  border
-                //     ${
-                //       deleteMessage ? "border-red-400" : "border-gray-500"
-                //     } scale-[1.4] ${deleteMessage && "border-4"}`}
                 className={radioClass}
               />
 
               <p className="text-[14px]">Delete for me</p>
             </label>
             <label className="flex items-center gap-2.5">
-              <input
-                type="radio"
-                // onChange={() => setDeleteMessage(false)}
-                name="Delete"
-                // className={`appearance-none w-4 h-4 rounded-full checked:${
-                //   deleteMessage ? "bg-[#232325]" : "bg-[#0e0e0f]"
-                // }  border
-                //     checked:${
-                //       deleteMessage ? "border-gray-500" : "border-red-400"
-                //     } scale-[1.4] cecked:${!deleteMessage && "border-4"}`}
-                className={radioClass}
-              />
+              <input type="radio" name="Delete" className={radioClass} />
               <p className="text-[14px]">Delete for everyone</p>
             </label>
           </div>
@@ -73,6 +52,7 @@ export function MessageDeletePopup() {
             Delete
           </button>
           <button
+            onClick={() => setShowDeletePopup(false)}
             type="button"
             className="w-[170px] bg-[#3b3b3c52] rounded-[6px] py-[7px] text-[13px]"
           >

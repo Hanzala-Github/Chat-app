@@ -6,6 +6,7 @@ import {
   getUsersForSidebar,
   sendMessage,
   deleteMessagesHistory,
+  deleteMessageForMeOrEveryOne,
 } from "../controllers/message.controller.js";
 
 const router = Router();
@@ -16,6 +17,6 @@ router.route("/send/:id").post(protectRoute, sendMessage);
 router
   .route("/delete-messages-history/:id")
   .delete(protectRoute, deleteMessagesHistory);
-
+router.route("/:id").delete(protectRoute, deleteMessageForMeOrEveryOne);
 // export
 export default router;
