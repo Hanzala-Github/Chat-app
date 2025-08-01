@@ -1,29 +1,33 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useStates } from "../store/useStates";
+import { useAuthStore } from "../store/useAuthStore";
+import { useChatStore } from "../store/useChatStore";
 
-export function MessageDeletePopup() {
-  const [deleteMessage, setDeleteMessage] = useState(false);
+export function MessageDeletePopup({
+  deletedData,
+  deleteBtntext,
+  MsgText,
+  deleteMessage,
+}) {
   const setShowDeletePopup = useStates.getState().setShowDeletePopup;
-  const radioClass = `appearance-none w-4 h-4 rounded-full scale-[1.4] border border-gray-500
-  ${
-    deleteMessage
-      ? "checked:bg-[#0e0e0f] checked:border-red-400 checked:border-4"
-      : "checked:bg-[#232325] checked:border-gray-500"
-  }`;
+  // const authUser = useAuthStore((state) => state.authUser);
+  const messages = useChatStore((state) => state.messages);
+
+  const storeMessageId = useStates((state) => state.storeMessageId);
+  // const findMsg = messages.filter((msg) => msg._id === storeMessageId);
 
   // ..................This is the jsx return part................//
   return (
     <motion.div className="fixed min-h-screen w-full flex items-center justify-center z-50 inset-0 bg-[#23272c11] ">
-      <div className="flex flex-col items-center justify-between w-[425px] h-[270px] bg-[#323233] border border-gray-600 rounded-[8px] overflow-hidden">
+      <div className="flex flex-col items-center justify-between w-[425px]  bg-[#323233] border border-gray-600 rounded-[8px] overflow-hidden">
         <div className="p-6 flex flex-col gap-3.5">
           <div className="space-y-3">
             <h3 className="text-[21px]">Delete message?</h3>
-            <p className="text-[14px]">
-              You can delete messages for everyone or just for yourself.
-            </p>
+            <p className="text-[14px]">{MsgText}</p>
           </div>
-          <div className="space-y-3">
+          {deletedData}
+          {/* <div className="space-y-3">
             <label className="flex items-center gap-2.5">
               <input
                 type="radio"
@@ -35,10 +39,15 @@ export function MessageDeletePopup() {
               <p className="text-[14px]">Delete for me</p>
             </label>
             <label className="flex items-center gap-2.5">
-              <input type="radio" name="Delete" className={radioClass} />
+              <input
+                onChange={() => setDeleteMessage(true)}
+                type="radio"
+                name="Delete"
+                className={radioClass}
+              />
               <p className="text-[14px]">Delete for everyone</p>
             </label>
-          </div>
+          </div> */}
         </div>
         <div className="flex items-center justify-evenly bg-[#161617] w-full p-6">
           <button
@@ -49,7 +58,7 @@ export function MessageDeletePopup() {
               deleteMessage && "text-black"
             }`}
           >
-            Delete
+            {deleteBtntext ? deleteBtntext : "Delete for me"}
           </button>
           <button
             onClick={() => setShowDeletePopup(false)}

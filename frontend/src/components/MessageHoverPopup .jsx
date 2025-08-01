@@ -24,7 +24,8 @@ export function MessageHoverPopup() {
   console.log(authUser);
   const findMsg = messages.filter((msg) => msg._id === storeMessageId);
 
-  // console.log(findMsg);
+  console.log(findMsg);
+  console.log(findMsg[0]?.senderId, authUser?._id);
 
   const { handleShowPicker } = useFunctions();
 
@@ -88,7 +89,7 @@ export function MessageHoverPopup() {
         className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]"
       >
         <Trash2 size={16} />
-        {findMsg?.senderId === authUser?._id ? "Delete" : "Delete for me"}
+        {findMsg[0]?.senderId === authUser?._id ? "Delete" : "Delete for me"}
       </button>
       <button className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px] border-b border-b-[#5857575b] pb-3.5">
         <Save size={16} /> Save as
