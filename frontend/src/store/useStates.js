@@ -1,6 +1,11 @@
 import { create } from "zustand";
 
 export const useStates = create((set) => ({
+  // .............openMessagePopup...............//
+
+  // openMessagePopup: null,
+  // setOpenMessagePopup: (openMessagePopup) => set({ openMessagePopup }),
+
   // ...........discardImage...................//
   discardImage: false,
   setDiscardImage: (value) => set({ discardImage: value }),
@@ -29,6 +34,10 @@ export const useStates = create((set) => ({
   // .............storeMessageId....................//
   storeMessageId: null,
   setStoreMessageId: (id) => set({ storeMessageId: id }),
+  // .............storeMsgIdToSetDeleteMsgPopup....................//
+  storeMsgIdToSetDeleteMsgPopup: null,
+  setStoreMsgIdToSetDeleteMsgPopup: (id) =>
+    set({ storeMsgIdToSetDeleteMsgPopup: id }),
   // .............singleMessageReply....................//
   singleMessageReply: null,
   setSingleMessageReply: (singleMessageReply) => set({ singleMessageReply }),

@@ -1,69 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { useStates } from "../store/useStates";
-import { useAuthStore } from "../store/useAuthStore";
-import { useChatStore } from "../store/useChatStore";
 
-export function MessageDeletePopup({
-  deletedData,
-  deleteBtntext,
-  MsgText,
-  deleteMessage,
-}) {
+export function MessageDeletePopup({ deletedData, MsgText, deleteBtn }) {
   const setShowDeletePopup = useStates.getState().setShowDeletePopup;
-  // const authUser = useAuthStore((state) => state.authUser);
-  const messages = useChatStore((state) => state.messages);
 
-  const storeMessageId = useStates((state) => state.storeMessageId);
-  // const findMsg = messages.filter((msg) => msg._id === storeMessageId);
-
-  // ..................This is the jsx return part................//
+  // ..............This is the jsx return part................//
   return (
     <motion.div className="fixed min-h-screen w-full flex items-center justify-center z-50 inset-0 bg-[#23272c11] ">
       <div className="flex flex-col items-center justify-between w-[425px]  bg-[#323233] border border-gray-600 rounded-[8px] overflow-hidden">
-        <div className="p-6 flex flex-col gap-3.5">
+        <div className="p-6 flex flex-col gap-3.5 w-full">
           <div className="space-y-3">
             <h3 className="text-[21px]">Delete message?</h3>
             <p className="text-[14px]">{MsgText}</p>
           </div>
           {deletedData}
-          {/* <div className="space-y-3">
-            <label className="flex items-center gap-2.5">
-              <input
-                type="radio"
-                onChange={() => setDeleteMessage(true)}
-                name="Delete"
-                className={radioClass}
-              />
-
-              <p className="text-[14px]">Delete for me</p>
-            </label>
-            <label className="flex items-center gap-2.5">
-              <input
-                onChange={() => setDeleteMessage(true)}
-                type="radio"
-                name="Delete"
-                className={radioClass}
-              />
-              <p className="text-[14px]">Delete for everyone</p>
-            </label>
-          </div> */}
         </div>
-        <div className="flex items-center justify-evenly bg-[#161617] w-full p-6">
-          <button
-            type="button"
-            className={`w-[170px] ${
-              deleteMessage ? "bg-red-400" : "bg-[#3b3b3c]"
-            } rounded-[6px] py-[7px] text-[13px] ${
-              deleteMessage && "text-black"
-            }`}
-          >
-            {deleteBtntext ? deleteBtntext : "Delete for me"}
-          </button>
+        <div className="flex items-center justify-between gap-2.5 bg-[#161617] w-full p-6">
+          {deleteBtn}
           <button
             onClick={() => setShowDeletePopup(false)}
             type="button"
-            className="w-[170px] bg-[#3b3b3c52] rounded-[6px] py-[7px] text-[13px]"
+            className="flex-1 bg-[#3b3b3c52] rounded-[6px] py-[7px] text-[13px]"
           >
             Cancel
           </button>

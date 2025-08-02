@@ -10,6 +10,9 @@ import { useStates } from "../store/useStates";
 export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   const [openMessagePopup, setOpenMessagePopup] = useState(null);
 
+  // const openMessagePopup = useStates((state) => state.openMessagePopup);
+  // const setOpenMessagePopup = useStates.getState().setOpenMessagePopup;
+
   const users = useChatStore((state) => state.users);
   const messages = useChatStore((state) => state.messages);
   const selectedUser = useChatStore((state) => state.selectedUser);
@@ -20,6 +23,12 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   const setPopupPositionLeftRight =
     useStates.getState().setPopupPositionLeftRight;
   const setStoreMessageId = useStates.getState().setStoreMessageId;
+  const setStoreMsgIdToSetDeleteMsgPopup =
+    useStates.getState().setStoreMsgIdToSetDeleteMsgPopup;
+
+  const storeMsgIdToSetDeleteMsgPopup = useStates(
+    (state) => state.storeMsgIdToSetDeleteMsgPopup
+  );
 
   const showDeletePopup = useStates((state) => state.showDeletePopup);
 
@@ -51,6 +60,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   const handleMessageHoverPopup = (e, messageId) => {
     e.stopPropagation();
     setStoreMessageId(messageId);
+    setStoreMsgIdToSetDeleteMsgPopup(messageId);
     setIsMessageHoverPopup(true);
     setRightPopUp(null);
 
@@ -67,8 +77,8 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
     setPopupPosition(isUpperHalf ? "bottom" : "top");
   };
   const findMsg =
-    messages.filter((msg) => msg._id === storeMessageId)[0]?.senderId ===
-    authUser?._id;
+    messages.filter((msg) => msg._id === storeMsgIdToSetDeleteMsgPopup)[0]
+      ?.senderId === authUser?._id;
   console.log(findMsg);
   // deletepopup.................//
   const [deleteMessage, setDeleteMessage] = useState(false);
@@ -81,6 +91,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   // ................This is the jsx return part.................//
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4 overflow-x-hidden">
+      {/* MessageDeletePopup component */}
       {findMsg
         ? showDeletePopup && (
             <MessageDeletePopup
@@ -107,19 +118,36 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
                   </label>
                 </div>
               }
-              deleteBtntext="Delete"
+              deleteBtn={
+                <button
+                  type="button"
+                  className={`flex-1 ${
+                    deleteMessage ? "bg-red-400" : "bg-[#3b3b3c]"
+                  } rounded-[6px] py-[7px] text-[13px] ${
+                    deleteMessage && "text-black"
+                  }`}
+                >
+                  Delete
+                </button>
+              }
               MsgText="You can delete messages for everyone or just for yourself."
-              deleteMessage={deleteMessage}
             />
           )
         : showDeletePopup && (
             <MessageDeletePopup
-              deleteBtntext="Delete for me"
+              deleteBtn={
+                <button
+                  type="button"
+                  className={`flex-1 bg-red-400 
+                   rounded-[6px] py-[7px] text-[13px] text-black`}
+                >
+                  Delete for me
+                </button>
+              }
               MsgText="This has no effect on your recipients' chat."
-              deleteMessage={deleteMessage}
             />
           )}
-
+      {/* messages mapping */}
       {messages?.map((message, index) => (
         <div
           key={message?._id}
@@ -217,7 +245,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
                 openMessagePopup === message?._id
                   ? "opacity-100 scale-100 w-[45px]"
                   : "opacity-0 scale-90 pointer-events-none w-[0px]"
-              }`}
+              } `}
             >
               <button>
                 <Smile size={20} className="text-[#bab8b8]" />

@@ -114,7 +114,7 @@ export const MessageInput = () => {
         onSubmit={handleSendMessage}
         className="flex items-center gap-2 flex-1 w-full"
       >
-        <div className="flex-1 flex gap-2">
+        <div className="flex-1 flex gap-2 items-center">
           <button
             type="button"
             className="btn btn-sm btn-circle ml-1"
