@@ -65,16 +65,42 @@ export const useChatStore = create((set, get) => ({
   deleteMessagesHistory: async (id) => {
     try {
       await axios.delete(`/message/delete-messages-history/${id}`);
-
+      const myId = useAuthStore.getState().authUser?._id;
       set((state) => ({
         messages: state.messages.filter(
-          (msg) => msg.receiverId !== id && msg.senderId !== id
+          (msg) =>
+            msg.receiverId !== id &&
+            msg.senderId !== id &&
+            !msg.deletedBy.includes(myId)
         ),
       }));
     } catch (error) {
       console.error("Error in deleteMessagesHistory function", error);
     }
   },
+
+  deleteMessageForMe: async (messageId) => {
+    try {
+      set((state) => ({
+        messages: state.messages.filter((msg) => msg._id !== messageId),
+      }));
+      await axios.delete(`/message/delete-message-forme/:${messageId}`);
+    } catch (error) {
+      console.error("Error in deleteMessageForMe function : ", error);
+    }
+  },
+
+  deleteMessageForEveryOne: async (messageId) => {
+    set((state) => ({
+      messages: state.messages.filter((msg) => msg._id !== messageId),
+    }));
+    try {
+      await axios.delete(`/message/delete-message-foreveryone/${messageId}`);
+    } catch (error) {
+      console.error("Error in deleteMessageForEveryOne function : ", error);
+    }
+  },
+
   // .............subscribeToMessages function...............//
 
   subscribeToMessages: () => {

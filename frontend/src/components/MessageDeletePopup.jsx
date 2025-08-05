@@ -1,9 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useStates } from "../store/useStates";
+import { useChatStore } from "../store/useChatStore";
 
 export function MessageDeletePopup({ deletedData, MsgText, deleteBtn }) {
   const setShowDeletePopup = useStates.getState().setShowDeletePopup;
+  const deleteMessageForMe = useChatStore.getState().deleteMessageForMe;
 
   // ..............This is the jsx return part................//
   return (

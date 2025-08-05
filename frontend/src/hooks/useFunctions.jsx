@@ -10,7 +10,7 @@ export function useFunctions() {
   const deleteMessagesHistory = useChatStore.getState().deleteMessagesHistory;
 
   const setShowPicker = useStates.getState().setShowPicker;
-  const showPicker = useStates((state) => state.showPicker);
+  // const showPicker = useStates((state) => state.showPicker);
   // ...........handleClosePopup............//
   const handleClosePopup = (e) => {
     e.stopPropagation();
@@ -55,7 +55,8 @@ export function useFunctions() {
   };
 
   // ..................handleShowPicker..............//
-  const handleShowPicker = (e, bol) => {
+  // const handleShowPicker = (e, bol) => {
+  const handleShowPicker = (e) => {
     e.stopPropagation();
     console.log("SHOWPICKER");
     setShowPicker((prev) => !prev);

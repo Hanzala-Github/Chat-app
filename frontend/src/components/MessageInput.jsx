@@ -155,8 +155,9 @@ export const MessageInput = () => {
         </div>
         {(text.length > 0 || imagePreview) && (
           <button
-            onClick={() => {
-              setShowPicker(false);
+            onClick={(e) => {
+              e.stopPropagation();
+              showPicker === true && setShowPicker(false);
               setSingleMessageReply(null);
               setIsReplyChatOpen(false);
             }}

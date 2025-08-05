@@ -155,9 +155,18 @@ const deleteMessagesHistory = async (req, res) => {
       { $addToSet: { deletedBy: myId } } // Add myId to deletedBy array
     );
 
+    await Message.deleteMany({
+      $or: [
+        { senderId: myId, receiverId: id },
+        { senderId: id, receiverId: myId },
+      ],
+      $expr: { $eq: [{ $size: "$deletedBy" }, 2] },
+    });
+
     return res.status(200).json({
       success: true,
-      message: "Messages hidden successfully from your side.",
+      message:
+        "Messages hidden for you. Deleted permanently if both have cleared.",
     });
   } catch (error) {
     console.error(`Error in deleteMessagesHistory controller:`, error);
@@ -168,10 +177,58 @@ const deleteMessagesHistory = async (req, res) => {
 };
 
 // ..................deleteSingleMessage....................//
-const deleteMessageForMeOrEveryOne = async (req, res) => {
-  const { id } = req.params;
+const deleteMessageForMe = async (req, res) => {
+  const { messageId } = req.params;
+  const myId = req.user._id;
 
-  // isDeleteForMe
+  try {
+    await Message.updateOne(
+      { _id: messageId },
+      {
+        $addToSet: { deletedBy: myId.toString() },
+      }
+    );
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Message delete for you successfully" });
+  } catch (error) {
+    console.error("Error in deleteMessageForMe:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+const deleteMessageForEveryOne = async (req, res) => {
+  const { messageId } = req.params;
+  const myId = req.user._id;
+  try {
+    const message = await Message.findById(messageId);
+
+    if (!message) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Message not found" });
+    }
+
+    if (message.senderId.toString() !== myId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to delete this message for everyone",
+      });
+    }
+
+    await Message.findByIdAndDelete(messageId);
+    return res.status(200).json({
+      success: true,
+      message: "Message deleted for everyone",
+    });
+  } catch (error) {
+    console.error("Error in deleteMessageForEveryOne:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
 };
 
 // .........export........//
@@ -180,5 +237,6 @@ export {
   getMessages,
   sendMessage,
   deleteMessagesHistory,
-  deleteMessageForMeOrEveryOne,
+  deleteMessageForMe,
+  deleteMessageForEveryOne,
 };
