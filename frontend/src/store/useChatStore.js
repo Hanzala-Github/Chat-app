@@ -80,22 +80,29 @@ export const useChatStore = create((set, get) => ({
   },
 
   deleteMessageForMe: async (messageId) => {
-    try {
-      set((state) => ({
-        messages: state.messages.filter((msg) => msg._id !== messageId),
-      }));
-      await axios.delete(`/message/delete-message-forme/:${messageId}`);
-    } catch (error) {
-      console.error("Error in deleteMessageForMe function : ", error);
-    }
+    const myId = useAuthStore.getState().authUser?._id;
+
+    set((state) => ({
+      messages: state.messages.filter(
+        (msg) => msg._id !== messageId && !msg.deletedBy.includes(myId)
+      ),
+    }));
+    await axios.delete(`/message/delete-message-forme/${messageId}`);
   },
 
-  deleteMessageForEveryOne: async (messageId) => {
+  deleteMessageForEveryOne: async (messageId, receiverId) => {
     set((state) => ({
       messages: state.messages.filter((msg) => msg._id !== messageId),
     }));
     try {
       await axios.delete(`/message/delete-message-foreveryone/${messageId}`);
+
+      const socket = useAuthStore.getState().socket;
+
+      socket.emit("deleteMessageForEveryone", {
+        messageId,
+        receiverId,
+      });
     } catch (error) {
       console.error("Error in deleteMessageForEveryOne function : ", error);
     }

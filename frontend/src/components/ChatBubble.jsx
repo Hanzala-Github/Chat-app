@@ -9,7 +9,8 @@ import { useStates } from "../store/useStates";
 
 export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   const [openMessagePopup, setOpenMessagePopup] = useState(null);
-
+  const [deleteMessage, setDeleteMessage] = useState(false);
+  const [isDeleteForEveryOne, setIsDeleteForEveryOne] = useState(false);
   // const openMessagePopup = useStates((state) => state.openMessagePopup);
   // const setOpenMessagePopup = useStates.getState().setOpenMessagePopup;
 
@@ -25,18 +26,37 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   const setStoreMessageId = useStates.getState().setStoreMessageId;
   const setStoreMsgIdToSetDeleteMsgPopup =
     useStates.getState().setStoreMsgIdToSetDeleteMsgPopup;
-
   const storeMsgIdToSetDeleteMsgPopup = useStates(
     (state) => state.storeMsgIdToSetDeleteMsgPopup
   );
-
   const showDeletePopup = useStates((state) => state.showDeletePopup);
+  const setShowDeletePopup = useStates.getState().setShowDeletePopup;
+  const deleteMessageForMe = useChatStore.getState().deleteMessageForMe;
+  const deleteMessageForEveryOne =
+    useChatStore.getState().deleteMessageForEveryOne;
 
   const messageEndRef = useRef(null);
   const bubbleRefs = useRef({});
-
   console.log(messages);
   console.log("ChatBubble re-render");
+
+  // .......useEffect..............//
+
+  const socket = useAuthStore((state) => state.socket);
+
+  useEffect(() => {
+    const onDelete = ({ messageId }) => {
+      useChatStore.setState((state) => ({
+        messages: state.messages.filter((msg) => msg._id !== messageId),
+      }));
+    };
+
+    socket.on("receiveDeletedMessage", onDelete);
+
+    return () => {
+      socket.off("receiveDeletedMessage", onDelete);
+    };
+  }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -80,14 +100,33 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
     messages.filter((msg) => msg._id === storeMsgIdToSetDeleteMsgPopup)[0]
       ?.senderId === authUser?._id;
   console.log(findMsg);
+
+  const findformeMsg =
+    messages.filter((msg) => msg._id === storeMsgIdToSetDeleteMsgPopup)[0]
+      ?.senderId !== authUser?._id;
+  console.log(findformeMsg);
+  console.log(storeMsgIdToSetDeleteMsgPopup);
   // deletepopup.................//
-  const [deleteMessage, setDeleteMessage] = useState(false);
+
   const radioClass = `appearance-none w-4 h-4 rounded-full scale-[1.4] border border-gray-500
   ${
     deleteMessage
       ? "checked:bg-[#0e0e0f] checked:border-red-400 checked:border-4"
       : "checked:bg-[#232325] checked:border-gray-500"
   }`;
+
+  const handleDeleteForMe = (e) => {
+    e.stopPropagation();
+    setShowDeletePopup(false);
+    deleteMessageForMe(storeMsgIdToSetDeleteMsgPopup);
+  };
+
+  const handleDeleteForMeOrEveryOne = (e) => {
+    e.stopPropagation();
+    setShowDeletePopup(false);
+    deleteMessageForEveryOne(storeMsgIdToSetDeleteMsgPopup, selectedUser);
+  };
+
   // ................This is the jsx return part.................//
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4 overflow-x-hidden">
@@ -100,7 +139,10 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
                   <label className="flex items-center gap-2.5">
                     <input
                       type="radio"
-                      onChange={() => setDeleteMessage(true)}
+                      onChange={() => {
+                        setDeleteMessage(true);
+                        setIsDeleteForEveryOne(false);
+                      }}
                       name="Delete"
                       className={radioClass}
                     />
@@ -109,7 +151,10 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
                   </label>
                   <label className="flex items-center gap-2.5">
                     <input
-                      onChange={() => setDeleteMessage(true)}
+                      onChange={() => {
+                        setDeleteMessage(true);
+                        setIsDeleteForEveryOne(true);
+                      }}
                       type="radio"
                       name="Delete"
                       className={radioClass}
@@ -120,6 +165,11 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
               }
               deleteBtn={
                 <button
+                  onClick={
+                    findMsg && isDeleteForEveryOne
+                      ? handleDeleteForMeOrEveryOne
+                      : handleDeleteForMe
+                  }
                   type="button"
                   className={`flex-1 ${
                     deleteMessage ? "bg-red-400" : "bg-[#3b3b3c]"
@@ -137,6 +187,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
             <MessageDeletePopup
               deleteBtn={
                 <button
+                  onClick={findformeMsg && handleDeleteForMe}
                   type="button"
                   className={`flex-1 bg-red-400 
                    rounded-[6px] py-[7px] text-[13px] text-black`}

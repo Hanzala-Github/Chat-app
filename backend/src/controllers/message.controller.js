@@ -189,6 +189,10 @@ const deleteMessageForMe = async (req, res) => {
       }
     );
 
+    await Message.deleteOne({
+      _id: messageId,
+      $expr: { $eq: [{ $size: "$deletedBy" }, 2] },
+    });
     return res
       .status(200)
       .json({ success: true, message: "Message delete for you successfully" });
