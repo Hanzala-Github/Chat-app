@@ -47,15 +47,20 @@ export const useChatStore = create((set, get) => ({
   // ..............sendMessage function..............//
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
+    const socket = useAuthStore.getState().socket;
     try {
       const res = await axios.post(
         `/message/send/${selectedUser}`,
         messageData
       );
 
-      console.log(res?.data?.data);
+      const newMessage = res?.data?.data;
       set({ messages: [...messages, res?.data?.data] });
-      // set((state) => ({ messages: [...state.messages, res?.data?.data] }));
+
+      socket.emit("SeeMessageDubbleTicks", {
+        receiverId: selectedUser, // Correct field name
+        messageId: newMessage._id, // consistent naming
+      });
     } catch (error) {
       toast.error(error);
     }
@@ -79,6 +84,13 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  // ..........deleteMessageById............//
+  deleteMessageById: (messageId) =>
+    set((state) => ({
+      messages: state.messages.filter((msg) => msg._id !== messageId),
+    })),
+
+  // .............deleteMessageForMe...........//
   deleteMessageForMe: async (messageId) => {
     const myId = useAuthStore.getState().authUser?._id;
 
@@ -90,14 +102,15 @@ export const useChatStore = create((set, get) => ({
     await axios.delete(`/message/delete-message-forme/${messageId}`);
   },
 
+  // .........deleteMessageForEveryOne...........//
+
   deleteMessageForEveryOne: async (messageId, receiverId) => {
-    set((state) => ({
-      messages: state.messages.filter((msg) => msg._id !== messageId),
-    }));
+    useChatStore.getState().deleteMessageById(messageId);
+
+    const socket = useAuthStore.getState().socket;
+
     try {
       await axios.delete(`/message/delete-message-foreveryone/${messageId}`);
-
-      const socket = useAuthStore.getState().socket;
 
       socket.emit("deleteMessageForEveryone", {
         messageId,

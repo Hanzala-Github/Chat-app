@@ -28,8 +28,22 @@ io.on("connection", (socket) => {
 
   // .........deleteMessageForEveryone......//
   socket.on("deleteMessageForEveryone", ({ messageId, receiverId }) => {
-    socket.to(receiverId).emit("receiveDeletedMessage", { messageId });
+    const receiverSocketId = userSocketMap[receiverId];
+
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("receiveDeletedMessage", { messageId });
+    }
   });
+
+  // .......SeeMessageDubbleTicks....//
+  socket.on("SeeMessageDubbleTicks", ({ receiverId, messageId }) => {
+    const receiverSocketId = userSocketMap[receiverId];
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("IsSeeingMessage", { messageId });
+    }
+  });
+
+  // ...........disconnect..............//
 
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);

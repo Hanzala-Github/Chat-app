@@ -11,8 +11,6 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   const [openMessagePopup, setOpenMessagePopup] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [isDeleteForEveryOne, setIsDeleteForEveryOne] = useState(false);
-  // const openMessagePopup = useStates((state) => state.openMessagePopup);
-  // const setOpenMessagePopup = useStates.getState().setOpenMessagePopup;
 
   const users = useChatStore((state) => state.users);
   const messages = useChatStore((state) => state.messages);
@@ -34,6 +32,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
   const deleteMessageForMe = useChatStore.getState().deleteMessageForMe;
   const deleteMessageForEveryOne =
     useChatStore.getState().deleteMessageForEveryOne;
+  const deleteMessageById = useChatStore.getState().deleteMessageById;
 
   const messageEndRef = useRef(null);
   const bubbleRefs = useRef({});
@@ -46,9 +45,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
 
   useEffect(() => {
     const onDelete = ({ messageId }) => {
-      useChatStore.setState((state) => ({
-        messages: state.messages.filter((msg) => msg._id !== messageId),
-      }));
+      deleteMessageById(messageId);
     };
 
     socket.on("receiveDeletedMessage", onDelete);
@@ -56,7 +53,7 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
     return () => {
       socket.off("receiveDeletedMessage", onDelete);
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -66,6 +63,43 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
     }, 50);
     return () => clearTimeout(timeout);
   }, [messages]);
+
+  const [isMessageSeen, setIsMessageSeen] = useState({});
+
+  console.log(isMessageSeen);
+  // useEffect(() => {
+  //   if (!socket) return;
+
+  //   const handleIsSeeingMessage = ({ messageId }) => {
+  //     const seenMessage = messages.filter((msg) => msg._id === messageId);
+  //     console.log(seenMessage);
+  //     if (seenMessage) {
+  //       setIsMessageSeen(true);
+  //     }
+  //   };
+
+  //   socket.on("IsSeeingMessage", handleIsSeeingMessage);
+
+  //   // return socket.off("IsSeeingMessage", handleIsSeeingMessage);
+  // }, [socket]);
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleIsSeeingMessage = ({ MessageId }) => {
+      setIsMessageSeen((prev) => ({
+        ...prev,
+        [MessageId]: true,
+      }));
+    };
+
+    socket.on("IsSeeingMessage", handleIsSeeingMessage);
+
+    return () => {
+      socket.off("IsSeeingMessage", handleIsSeeingMessage);
+    };
+  }, [socket]);
+
+  // .............handleMouseEnter...........//
 
   const handleMouseEnter = (e, message) => {
     e.stopPropagation();
@@ -284,6 +318,17 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
               )}
               {message.text && (
                 <p className="leading-none text-[15px]">{message.text}</p>
+              )}
+
+              {/* ...new... */}
+              {message?.senderId === authUser?._id && (
+                <span className="text-[12px] mt-1">
+                  {isMessageSeen[message._id] ? (
+                    <span className="text-blue-400">✔✔</span>
+                  ) : (
+                    <span className="text-gray-300">✔</span>
+                  )}
+                </span>
               )}
 
               {message?._id === storeMessageId && <MessageHoverPopup />}
