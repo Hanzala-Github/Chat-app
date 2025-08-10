@@ -7,12 +7,14 @@ import { useStates } from "../store/useStates";
 export function SelectImagePopup({
   imagePreview,
   removeImage,
-  setShowPicker,
+  // setShowPicker,
   text,
   setText,
   handleSendMessage,
 }) {
   const setDiscardImage = useStates.getState().setDiscardImage;
+  const setShowPicker = useStates.getState().setShowPicker;
+  const showPicker = useStates((state) => state.showPicker);
 
   // ..................This is the jsx return part....................//
   return (
@@ -60,7 +62,10 @@ export function SelectImagePopup({
             />
 
             <button
-              onClick={() => setShowPicker(false)}
+              onClick={(e) => {
+                e.stopPropagation();
+                showPicker === true && setShowPicker(false);
+              }}
               type="submit"
               className="btn btn-sm bg-[#5251D4] h-[80%] mx-1.5"
               disabled={!text.trim() && !imagePreview}

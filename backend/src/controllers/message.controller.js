@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import cloudinary from "../lib/cloudinary.js";
 import { getReceiverSocketId, io } from "../lib/socket.js";
+import mongoose from "mongoose";
 
 const getUsersForSidebar = async (req, res) => {
   try {
@@ -178,29 +179,71 @@ const deleteMessagesHistory = async (req, res) => {
 
 // ..................deleteSingleMessage....................//
 const deleteMessageForMe = async (req, res) => {
-  const { messageId } = req.params;
-  const myId = req.user._id;
+  // const { messageId } = req.params;
+  // const myId = req.user._id;
+
+  // try {
+
+  // .........This is my old code but best code.......//
+  // await Message.updateOne(
+  //   { _id: messageId },
+  //   {
+  //     $addToSet: { deletedBy: myId.toString() },
+  //   }
+  // );
+  // await Message.updateOne({ replyTo: messageId }, { isReply: false });
+  // await Message.deleteOne({
+  //   _id: messageId,
+  //   $expr: { $eq: [{ $size: "$deletedBy" }, 2] },
+  // });
+  // return res
+  //   .status(200)
+  //   .json({ success: true, message: "Message delete for you successfully" });
+  // } catch (error) {
+  //   console.error("Error in deleteMessageForMe:", error);
+  //   return res
+  //     .status(500)
+  //     .json({ success: false, message: "Internal Server Error" });
+  // }
 
   try {
-    await Message.updateOne(
-      { _id: messageId },
-      {
-        $addToSet: { deletedBy: myId.toString() },
-      }
-    );
+    const { messageId } = req.params;
+    const userId = req.user._id;
 
-    await Message.deleteOne({
-      _id: messageId,
-      $expr: { $eq: [{ $size: "$deletedBy" }, 2] },
-    });
-    return res
-      .status(200)
-      .json({ success: true, message: "Message delete for you successfully" });
+    // Find the message
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+
+    // If user already deleted
+    if (message.deletedBy.includes(userId)) {
+      return res.status(400).json({ error: "Already deleted" });
+    }
+
+    // Push user to deletedBy array
+    message.deletedBy.push(userId);
+
+    if (message.deletedBy.length < 2) {
+      // Case 1: First user deletes → Just save
+      await message.save();
+      return res.status(200).json({ message: "Deleted for you only" });
+    } else {
+      // Case 2: Second user deletes → Remove from DB + set isReply = false for replies
+      // First, update any messages that reply to this one
+      await Message.updateMany(
+        { replyTo: messageId },
+        { $set: { isReply: false, replyTo: null } }
+      );
+
+      // Then delete the original message
+      await Message.findByIdAndDelete(messageId);
+
+      return res.status(200).json({ message: "Message deleted for everyone" });
+    }
   } catch (error) {
-    console.error("Error in deleteMessageForMe:", error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Internal Server Error" });
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
   }
 };
 const deleteMessageForEveryOne = async (req, res) => {

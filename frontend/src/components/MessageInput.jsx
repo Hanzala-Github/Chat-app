@@ -100,7 +100,7 @@ export const MessageInput = () => {
         <SelectImagePopup
           imagePreview={imagePreview}
           removeImage={removeImage}
-          setShowPicker={setShowPicker}
+          // setShowPicker={setShowPicker}
           text={text}
           setText={setText}
           handleSendMessage={handleSendMessage}

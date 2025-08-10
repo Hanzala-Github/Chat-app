@@ -36,12 +36,12 @@ io.on("connection", (socket) => {
   });
 
   // .......SeeMessageDubbleTicks....//
-  socket.on("SeeMessageDubbleTicks", ({ receiverId, messageId }) => {
-    const receiverSocketId = userSocketMap[receiverId];
-    if (receiverSocketId) {
-      io.to(receiverSocketId).emit("IsSeeingMessage", { messageId });
-    }
-  });
+  // socket.on("SeeMessageDubbleTicks", ({ receiverId, messageId }) => {
+  //   const receiverSocketId = userSocketMap[receiverId];
+  //   if (receiverSocketId) {
+  //     io.to(receiverSocketId).emit("IsSeeingMessage", { messageId });
+  //   }
+  // });
 
   // ...........disconnect..............//
 

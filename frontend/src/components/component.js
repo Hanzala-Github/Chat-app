@@ -8,6 +8,8 @@ export * from "./Sidebar";
 export * from "./SelectImagePopup";
 export * from "./DiscardImagePopup";
 export * from "./ChatBubble";
+export * from "./MessageList";
+export * from "./MessageItem";
 export * from "./ReplyChat";
 export * from "./skeletons/SidebarSkeleton";
 export * from "./skeletons/MessageSkeleton";
