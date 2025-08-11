@@ -1,5 +1,5 @@
 import React from "react";
-import { useStates } from "../store/useStates";
+import { useStates } from "../../store/useStates";
 
 export function DiscardImagePopup({ setImagePreview }) {
   const setDiscardImage = useStates.getState().setDiscardImage;

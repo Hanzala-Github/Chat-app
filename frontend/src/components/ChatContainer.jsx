@@ -3,9 +3,9 @@ import React, { useEffect } from "react";
 // import { shallow } from "zustand/shallow";
 import {
   ChatHeader,
-  MessageInput,
   MessageSkeleton,
   ChatBubble,
+  MessageInput,
 } from "./component";
 import { useStates } from "../store/useStates";
 import { useFunctions } from "../hooks/useFunctions";

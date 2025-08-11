@@ -24,8 +24,10 @@ export function MessageHoverPopup() {
   console.log(authUser);
   const findMsg = messages.filter((msg) => msg._id === storeMessageId);
 
-  console.log(findMsg);
-  console.log(findMsg[0]?.senderId, authUser?._id);
+  // console.log(findMsg);
+  // console.log(findMsg[0]?.senderId, authUser?._id);
+
+  console.log("MessageHoverPopup");
 
   const { handleShowPicker } = useFunctions();
 
