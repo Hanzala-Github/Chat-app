@@ -52,7 +52,9 @@ export function SelectImagePopup({
             className="flex bg-[#1D232A] items-center justify-center h-[15%] rounded-[5px]"
           >
             <input
-              onClick={() => setShowPicker(false)}
+              onClick={() => {
+                if (showPicker) setShowPicker(false);
+              }}
               type="text"
               className="border border-none focus:outline-none  rounded-lg input-sm sm:input-md w-full py-3 pl-1.5"
               placeholder="Caption (optional)"
@@ -64,7 +66,8 @@ export function SelectImagePopup({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                showPicker === true && setShowPicker(false);
+                // showPicker === true && setShowPicker(false);
+                if (showPicker) setShowPicker(false);
               }}
               type="submit"
               className="btn btn-sm bg-[#5251D4] h-[80%] mx-1.5"

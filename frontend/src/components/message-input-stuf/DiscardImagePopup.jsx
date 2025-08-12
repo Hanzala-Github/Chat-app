@@ -1,12 +1,13 @@
 import React from "react";
 import { useStates } from "../../store/useStates";
 
-export function DiscardImagePopup({ setImagePreview }) {
+export function DiscardImagePopup({ setImagePreview, fileInputRef }) {
   const setDiscardImage = useStates.getState().setDiscardImage;
 
   const handleImageDiscard = () => {
     setDiscardImage(false);
     setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
   // ..............This is the jsx return part...............//
 

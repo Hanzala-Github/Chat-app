@@ -198,6 +198,7 @@ import {
   EmojiPopup,
   ImageUploadButton,
   ReplyChat,
+  SelectImagePopup,
   SendButton,
   TextInputField,
 } from "../component";
@@ -217,12 +218,12 @@ export const MessageInput = () => {
   const storeMessageIdOnReplyMessage = useStates(
     (state) => state.storeMessageIdOnReplyMessage
   );
-  console.log(isReplyChatOpen);
-  console.log("MessageInput");
+  // console.log(isReplyChatOpen);
+  // console.log("MessageInput");
   const setShowPicker = useStates.getState().setShowPicker;
   const showPicker = useStates((state) => state.showPicker);
   const { handleShowPicker } = useFunctions();
-
+  console.log({ imagePreview, discardImage });
   // Disable text input if image is selected
   useEffect(() => {
     setInputDisabled(!!imagePreview);
@@ -291,7 +292,10 @@ export const MessageInput = () => {
       )}
 
       {imagePreview && discardImage && (
-        <DiscardImagePopup setImagePreview={setImagePreview} />
+        <DiscardImagePopup
+          setImagePreview={setImagePreview}
+          fileInputRef={fileInputRef}
+        />
       )}
 
       <form
