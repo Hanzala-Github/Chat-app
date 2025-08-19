@@ -109,7 +109,7 @@ export const Sidebar = () => {
         </div>
       </div>
 
-      <div onClick={handleClosePopup} className="overflow-y-auto w-full py-3">
+      <div onClick={handleClosePopup} className="overflow-y-auto w-full py-3 ">
         {filteredUsers.map((user) => (
           <div
             key={user?._id}
@@ -119,10 +119,10 @@ export const Sidebar = () => {
                 : undefined
             }
             onContextMenu={(e) => handleMouseRight(e, user)}
-            className={`
-            w-full p-3 flex items-center relative gap-3
+            className={`w-full p-3 flex items-center relative gap-3
             hover:bg-base-300 transition-colors
             active:bg-base-300 transition-colors
+            
             ${
               selectedUser === user._id
                 ? "bg-base-300 ring-1 ring-base-300"
@@ -136,7 +136,7 @@ export const Sidebar = () => {
             )}
 
             {/* Profile Picture & Online Status */}
-            <div className="relative mx-auto lg:mx-0">
+            <div className="relative mx-auto lg:mx-0 ">
               <img
                 src={user.profilePic || "/avatar.png"}
                 alt={user.name}
