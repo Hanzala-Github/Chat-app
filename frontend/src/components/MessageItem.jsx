@@ -382,7 +382,7 @@ import { useStates } from "../store/useStates";
 
 export const MessageItem = React.memo(function MessageItem({
   message,
-  setRightPopUp,
+  // setRightPopUp,
   isLast,
   lastRef,
 }) {
@@ -392,7 +392,7 @@ export const MessageItem = React.memo(function MessageItem({
   const authUser = useAuthStore((state) => state.authUser);
   const users = useChatStore((state) => state.users);
   const selectedUser = useChatStore((state) => state.selectedUser);
-
+  const setRightPopUp = useStates.getState().setRightPopUp;
   const setStoreMessageId = useStates.getState().setStoreMessageId;
   const setStoreMsgIdToSetDeleteMsgPopup =
     useStates.getState().setStoreMsgIdToSetDeleteMsgPopup;

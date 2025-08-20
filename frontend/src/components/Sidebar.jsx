@@ -5,13 +5,8 @@ import { Search, Users } from "lucide-react";
 import { ChatOptionsPopup, SidebarSkeleton } from "./component";
 import { useStates } from "../store/useStates";
 import { useFunctions } from "../hooks/useFunctions";
-// sidebar component
+//........... sidebar component..................//
 export const Sidebar = () => {
-  // const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
-  //   useChatStore();
-  // const { onlineUsers } = useAuthStore();
-  // const { setisShowCloseChat, rightPopUp, setRightPopUp } = useStates();
-
   const getUsers = useChatStore.getState().getUsers;
   const setSelectedUser = useChatStore.getState().setSelectedUser;
   const users = useChatStore((state) => state.users);
@@ -58,6 +53,8 @@ export const Sidebar = () => {
       }
     }
   };
+
+  console.log("Sidebar component");
 
   if (isUsersLoading) return <SidebarSkeleton />;
 

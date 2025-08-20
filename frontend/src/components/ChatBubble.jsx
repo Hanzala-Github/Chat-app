@@ -365,13 +365,13 @@
 // });
 // components/ChatBubble.jsx
 import React, { useEffect, useState } from "react";
-import { MessageDeletePopup } from "./component";
+import { MessageDeletePopup, MessageList } from "./component";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 import { useStates } from "../store/useStates";
-import { MessageList } from "./MessageList";
+// import { MessageList } from "./MessageList";
 
-export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
+export const ChatBubble = React.memo(function ChatBubble() {
   const [deleteMessage, setDeleteMessage] = useState(false);
   const [isDeleteForEveryOne, setIsDeleteForEveryOne] = useState(false);
 
@@ -522,7 +522,8 @@ export const ChatBubble = React.memo(function ChatBubble({ setRightPopUp }) {
           )}
 
       {/* MessageList: contains the scroll effect + message mapping */}
-      <MessageList setRightPopUp={setRightPopUp} />
+      {/* <MessageList setRightPopUp={setRightPopUp} /> */}
+      <MessageList />
     </div>
   );
 });

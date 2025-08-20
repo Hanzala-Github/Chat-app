@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { MessageItem } from "./MessageItem";
 
-export const MessageList = React.memo(function MessageList({ setRightPopUp }) {
+export const MessageList = React.memo(function MessageList() {
   const messages = useChatStore((state) => state.messages);
   const messageEndRef = useRef(null);
 
@@ -24,7 +24,7 @@ export const MessageList = React.memo(function MessageList({ setRightPopUp }) {
         <MessageItem
           key={message?._id}
           message={message}
-          setRightPopUp={setRightPopUp}
+          // setRightPopUp={setRightPopUp}
           isLast={index === messages.length - 1}
           lastRef={messageEndRef}
         />

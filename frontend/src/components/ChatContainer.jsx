@@ -9,6 +9,8 @@ import {
 } from "./component";
 import { useStates } from "../store/useStates";
 import { useFunctions } from "../hooks/useFunctions";
+
+// ............chatContainer component..............//
 const ChatContainer = () => {
   const selectedUser = useChatStore((state) => state.selectedUser);
   const isMessagesLoading = useChatStore((state) => state.isMessagesLoading);
@@ -16,7 +18,6 @@ const ChatContainer = () => {
   const subscribeToMessages = useChatStore.getState().subscribeToMessages;
   const unsubscribeFromMessages =
     useChatStore.getState().unsubscribeFromMessages;
-  const setRightPopUp = useStates.getState().setRightPopUp;
   const rightPopUp = useStates((state) => state.rightPopUp);
   const storeMessageId = useStates((state) => state.storeMessageId);
   const { handleClosePopup } = useFunctions();
@@ -49,7 +50,7 @@ const ChatContainer = () => {
       className="flex-1 flex flex-col overflow-auto"
     >
       <ChatHeader />
-      <ChatBubble setRightPopUp={setRightPopUp} />
+      <ChatBubble />
       <MessageInput />
     </div>
   );
