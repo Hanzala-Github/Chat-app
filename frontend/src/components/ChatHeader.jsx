@@ -3,9 +3,6 @@ import { X } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 export const ChatHeader = () => {
-  // const { selectedUser, setSelectedUser, users } = useChatStore();
-  // const { onlineUsers } = useAuthStore();
-
   const setSelectedUser = useChatStore.getState().setSelectedUser;
   const selectedUser = useChatStore((state) => state.selectedUser);
   const users = useChatStore((state) => state.users);

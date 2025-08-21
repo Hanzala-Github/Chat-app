@@ -1,6 +1,6 @@
 import React from "react";
-import { Sidebar } from "../components/component";
-import { ChatView } from "../components/ChatView";
+import { Sidebar, ChatView } from "../components/component";
+// import {  } from "../components/ChatView";
 export const HomePage = () => {
   console.log("Homeeee");
   // ...............This is the jsx return part............//

@@ -1,5 +1,6 @@
 export * from "./Navbar";
 export * from "./AuthImagePattern";
+export * from "./ChatView";
 export * from "./ChatContainer";
 export * from "./ChatHeader";
 export * from "./message-input-stuf/MessageInput";

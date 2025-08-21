@@ -47,20 +47,13 @@ export const useChatStore = create((set, get) => ({
   // ..............sendMessage function..............//
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
-    // const socket = useAuthStore.getState().socket;
     try {
       const res = await axios.post(
         `/message/send/${selectedUser}`,
         messageData
       );
 
-      // const newMessage = res?.data?.data;
       set({ messages: [...messages, res?.data?.data] });
-
-      // socket.emit("SeeMessageDubbleTicks", {
-      //   receiverId: selectedUser, // Correct field name
-      //   messageId: newMessage._id, // consistent naming
-      // });
     } catch (error) {
       toast.error(error);
     }
