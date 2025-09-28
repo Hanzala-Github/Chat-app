@@ -1,14 +1,18 @@
 import React from "react";
 import { Send } from "lucide-react";
+import { useStates } from "../../store/useStates";
 
 export const SendButton = ({
   text,
   imagePreview,
   showPicker,
   setShowPicker,
-  setSingleMessageReply,
+  // setSingleMessageReply,
   setIsReplyChatOpen,
 }) => {
+  const setSingleMessageReply = useStates.getState().setSingleMessageReply;
+  console.log("SendButton");
+
   if (!text.length && !imagePreview) return null;
 
   return (

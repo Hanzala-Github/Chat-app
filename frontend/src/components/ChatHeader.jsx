@@ -1,11 +1,17 @@
+// ...................................................................//
 import React from "react";
 import { X } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
-import { useChatStore } from "../store/useChatStore";
+// import { useChatStore } from "../store/useChatStore";
+import { useStates } from "../store/useStates";
+import { useGetUsers } from "../hooks/useChatQueries";
 export const ChatHeader = () => {
-  const setSelectedUser = useChatStore.getState().setSelectedUser;
-  const selectedUser = useChatStore((state) => state.selectedUser);
-  const users = useChatStore((state) => state.users);
+  // const setSelectedUser = useChatStore.getState().setSelectedUser;
+  // const selectedUser = useChatStore((state) => state.selectedUser);
+  const setSelectedUser = useStates.getState().setSelectedUser;
+  const selectedUser = useStates((state) => state.selectedUser);
+  // const users = useChatStore((state) => state.users);
+  const { data: users = [] } = useGetUsers();
 
   const onlineUsers = useAuthStore((state) => state.onlineUsers);
 

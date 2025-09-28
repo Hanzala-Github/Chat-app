@@ -1,14 +1,18 @@
+// .........................................................................//
 import React from "react";
 import { X } from "lucide-react";
 import { useStates } from "../store/useStates";
 import { useAuthStore } from "../store/useAuthStore";
-import { useChatStore } from "../store/useChatStore";
+import { useGetUsers } from "../hooks/useChatQueries";
+// import { useChatStore } from "../store/useChatStore";
 
 export function ReplyChat() {
   const authUser = useAuthStore((state) => state.authUser);
-  const users = useChatStore((state) => state.users);
+  // const users = useChatStore((state) => state.users);
+  const { data: users } = useGetUsers();
   // const messages = useChatStore((state) => state.messages);
-  const selectedUser = useChatStore((state) => state.selectedUser);
+  // const selectedUser = useChatStore((state) => state.selectedUser);
+  const selectedUser = useStates((state) => state.selectedUser);
   const setIsReplyChatOpen = useStates.getState().setIsReplyChatOpen;
   const singleMessageReply = useStates((state) => state.singleMessageReply);
   console.log(singleMessageReply);
@@ -28,10 +32,10 @@ export function ReplyChat() {
           //   "https://plus.unsplash.com/premium_photo-1744805464532-998bee603eae?q=80&w=1974"
           // }
           src={
-            singleMessageReply[0].receiverId === selectedUser
-              ? authUser.profilePic
+            singleMessageReply[0]?.receiverId === selectedUser
+              ? authUser?.profilePic
               : users.find(
-                  (user) => user._id === singleMessageReply[0].senderId
+                  (user) => user?._id === singleMessageReply[0]?.senderId
                 )?.profilePic
           }
           alt="avatar"

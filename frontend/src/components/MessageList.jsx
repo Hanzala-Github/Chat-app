@@ -1,10 +1,16 @@
+// ...................................................................//
 // components/MessageList.jsx
 import React, { useEffect, useRef } from "react";
-import { useChatStore } from "../store/useChatStore";
+// import { useChatStore } from "../store/useChatStore";
 import { MessageItem } from "./MessageItem";
+import { useGetMessages } from "../hooks/useChatQueries";
+import { useStates } from "../store/useStates";
 
 export const MessageList = React.memo(function MessageList() {
-  const messages = useChatStore((state) => state.messages);
+  // const messages = useChatStore((state) => state.messages);
+  const selectedUser = useStates((state) => state.selectedUser);
+
+  const { data: messages = [] } = useGetMessages(selectedUser);
   const messageEndRef = useRef(null);
 
   useEffect(() => {

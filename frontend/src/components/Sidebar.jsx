@@ -1,17 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { useChatStore } from "../store/useChatStore";
+// ..........................................................................//
+// import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+// import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { Search, Users } from "lucide-react";
 import { ChatOptionsPopup, SidebarSkeleton } from "./component";
 import { useStates } from "../store/useStates";
 import { useFunctions } from "../hooks/useFunctions";
+import { useGetUsers } from "../hooks/useChatQueries";
 //........... sidebar component..................//
 export const Sidebar = () => {
-  const getUsers = useChatStore.getState().getUsers;
-  const setSelectedUser = useChatStore.getState().setSelectedUser;
-  const users = useChatStore((state) => state.users);
-  const selectedUser = useChatStore((state) => state.selectedUser);
-  const isUsersLoading = useChatStore((state) => state.isUsersLoading);
+  // const getUsers = useChatStore.getState().getUsers;
+  // const setSelectedUser = useChatStore.getState().setSelectedUser;
+  // const selectedUser = useChatStore((state) => state.selectedUser);
+  const setSelectedUser = useStates.getState().setSelectedUser;
+  const selectedUser = useStates((state) => state.selectedUser);
+  // const users = useChatStore((state) => state.users);
+  // const isUsersLoading = useChatStore((state) => state.isUsersLoading);
+
+  const { data: users = [], isLoading: isUsersLoading } = useGetUsers();
 
   const onlineUsers = useAuthStore((state) => state.onlineUsers);
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
@@ -28,9 +35,9 @@ export const Sidebar = () => {
 
   const { handleClosePopup, handleMouseRight } = useFunctions();
 
-  useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+  // useEffect(() => {
+  //   getUsers();
+  // }, [getUsers]);
 
   const filteredUsers = showOnlineOnly
     ? users.filter((user) => onlineUsers.includes(user?._id))

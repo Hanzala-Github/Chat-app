@@ -9,16 +9,19 @@ import {
   SettingsPage,
   SignupPage,
 } from "./pages/page";
-import { useAuthStore } from "./store/useAuthStore";
+// import { useAuthStore } from "./store/useAuthStore";
 import { Loader } from "lucide-react";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "sonner";
+
+// import { useCheckAuth } from "./hooks/useAuthQueries";
+import { useAuthStore } from "./store/useAuthStore";
 
 const App = () => {
-  // const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
-  // const { theme } = useThemeStore();
+  // const { data: authUser, isLoading: isCheckingAuth } = useCheckAuth();
   const authUser = useAuthStore((state) => state.authUser);
   const checkAuth = useAuthStore.getState().checkAuth;
   const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth);
+
   const theme = useThemeStore((state) => state.theme);
 
   console.log("App component");
@@ -26,6 +29,16 @@ const App = () => {
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  // .........new..........//
+
+  // useEffect(() => {
+  //   if (authUser) {
+  //     console.log("User logged in:", authUser);
+  //   } else {
+  //     console.log("No auth user found, redirect to login maybe...");
+  //   }
+  // }, [authUser]);
 
   if (isCheckingAuth && !authUser) {
     return (
@@ -39,6 +52,7 @@ const App = () => {
 
   return (
     <div data-theme={theme}>
+      <Toaster richColors position="bottom-right" />
       <Navbar />
       <Routes>
         <Route
@@ -60,7 +74,6 @@ const App = () => {
           element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
         />
       </Routes>
-      <Toaster />
     </div>
   );
 };

@@ -1,6 +1,8 @@
-import { useChatStore } from "../store/useChatStore";
-import React, { useEffect } from "react";
-// import { shallow } from "zustand/shallow";
+// ................................................................//
+
+// import { useChatStore } from "../store/useChatStore";
+// import React, { useEffect } from "react";
+import React from "react";
 import {
   ChatHeader,
   MessageSkeleton,
@@ -9,29 +11,42 @@ import {
 } from "./component";
 import { useStates } from "../store/useStates";
 import { useFunctions } from "../hooks/useFunctions";
+import {
+  useGetMessages,
+  useSubscribeToMessages,
+} from "../hooks/useChatQueries";
 
 // ............chatContainer component..............//
 const ChatContainer = () => {
-  const selectedUser = useChatStore((state) => state.selectedUser);
-  const isMessagesLoading = useChatStore((state) => state.isMessagesLoading);
-  const getMessages = useChatStore.getState().getMessages;
-  const subscribeToMessages = useChatStore.getState().subscribeToMessages;
-  const unsubscribeFromMessages =
-    useChatStore.getState().unsubscribeFromMessages;
-  const rightPopUp = useStates((state) => state.rightPopUp);
-  const storeMessageId = useStates((state) => state.storeMessageId);
-  const { handleClosePopup } = useFunctions();
-  useEffect(() => {
-    if (!selectedUser) return;
-    getMessages(selectedUser);
-    subscribeToMessages();
-    return () => unsubscribeFromMessages();
-  }, [selectedUser]);
+  // const selectedUser = useChatStore((state) => state.selectedUser);
+  const selectedUser = useStates((state) => state.selectedUser);
+  // const isMessagesLoading = useChatStore((state) => state.isMessagesLoading);
+  // const getMessages = useChatStore.getState().getMessages;
 
-  const handleOuterClick = (e) => {
-    if (e.target.closest(".popup-content")) return;
-    handleClosePopup(e);
-  };
+  const { isLoading: isMessagesLoading } = useGetMessages(selectedUser);
+
+  // const subscribeToMessages = useChatStore.getState().subscribeToMessages;
+  // const unsubscribeFromMessages =
+  //   useChatStore.getState().unsubscribeFromMessages;
+
+  // const rightPopUp = useStates((state) => state.rightPopUp);
+  // const storeMessageId = useStates((state) => state.storeMessageId);
+  const { handleClosePopup } = useFunctions();
+
+  useSubscribeToMessages(selectedUser);
+
+  // useEffect(() => {
+  //   if (!selectedUser) return;
+  //   getMessages(selectedUser);
+  //   subscribeToMessages();
+  //   return () => unsubscribeFromMessages();
+  // }, [selectedUser]);
+
+  // const handleOuterClick = (e) => {
+  //   if (e.target.closest(".popup-content")) return;
+  //   console.log("HANDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDddd");
+  //   handleClosePopup(e);
+  // };
 
   if (isMessagesLoading) {
     return (
@@ -46,7 +61,8 @@ const ChatContainer = () => {
   // ...............This is the jsx return part...........//
   return (
     <div
-      onClick={(rightPopUp || storeMessageId) && handleOuterClick}
+      // onClick={(rightPopUp || storeMessageId) && handleOuterClick}
+      onClick={(e) => handleClosePopup(e)}
       className="flex-1 flex flex-col overflow-auto"
     >
       <ChatHeader />

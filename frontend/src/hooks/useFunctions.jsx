@@ -1,13 +1,18 @@
-import { useChatStore } from "../store/useChatStore";
+// .........................................................................//
+
+// import { useChatStore } from "../store/useChatStore";
 import { useStates } from "../store/useStates";
+import { useDeleteMessagesHistory } from "./useChatQueries";
 export function useFunctions() {
   const setRightPopUp = useStates.getState().setRightPopUp;
   const setIsMessageHoverPopup = useStates.getState().setIsMessageHoverPopup;
   const setisShowCloseChat = useStates.getState().setisShowCloseChat;
   const setPopupPosition = useStates.getState().setPopupPosition;
   const setStoreMessageId = useStates.getState().setStoreMessageId;
-  const selectedUser = useChatStore.getState().selectedUser;
-  const deleteMessagesHistory = useChatStore.getState().deleteMessagesHistory;
+  // const selectedUser = useChatStore.getState().selectedUser;
+  const selectedUser = useStates.getState().selectedUser;
+  // const deleteMessagesHistory = useChatStore.getState().deleteMessagesHistory;
+  const deleteMessageHistory = useDeleteMessagesHistory();
 
   const setShowPicker = useStates.getState().setShowPicker;
   // const showPicker = useStates((state) => state.showPicker);
@@ -24,7 +29,8 @@ export function useFunctions() {
 
   const handleDeleteMessagesHis = async (e) => {
     e.stopPropagation();
-    await deleteMessagesHistory(selectedUser);
+    await deleteMessageHistory.mutate(selectedUser);
+    // await deleteMessagesHistory(selectedUser);
     setRightPopUp(null);
 
     console.log("called kill");

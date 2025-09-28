@@ -6,7 +6,7 @@ export const TextInputField = React.memo(
     const handleSetText = useCallback((e) => {
       setText(e.target.value);
     }, []);
-
+    console.log("TextInputField");
     return (
       <input
         onClick={(e) => {

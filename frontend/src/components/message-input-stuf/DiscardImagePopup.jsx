@@ -9,6 +9,9 @@ export function DiscardImagePopup({ setImagePreview, fileInputRef }) {
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
+
+  console.log("DiscardImagePopup");
+
   // ..............This is the jsx return part...............//
 
   return (

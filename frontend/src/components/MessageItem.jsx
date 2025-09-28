@@ -1,10 +1,12 @@
+// ..........................................................................//
 import React, { useRef } from "react";
 import { ChevronDown, Smile } from "lucide-react";
 import { formatMessageTime } from "../lib/utils";
 import { MessageHoverPopup } from "./component";
 import { useAuthStore } from "../store/useAuthStore";
-import { useChatStore } from "../store/useChatStore";
+// import { useChatStore } from "../store/useChatStore";
 import { useStates } from "../store/useStates";
+import { useGetUsers } from "../hooks/useChatQueries";
 
 export const MessageItem = React.memo(function MessageItem({
   message,
@@ -14,8 +16,10 @@ export const MessageItem = React.memo(function MessageItem({
   const hoverRef = useRef(false);
   console.log("MessageItem component");
   const authUser = useAuthStore((state) => state.authUser);
-  const users = useChatStore((state) => state.users);
-  const selectedUser = useChatStore((state) => state.selectedUser);
+  // const users = useChatStore((state) => state.users);
+  const { data: users } = useGetUsers();
+  // const selectedUser = useChatStore((state) => state.selectedUser);
+  const selectedUser = useStates((state) => state.selectedUser);
   const setRightPopUp = useStates.getState().setRightPopUp;
   const setStoreMessageId = useStates.getState().setStoreMessageId;
   const setStoreMsgIdToSetDeleteMsgPopup =
@@ -53,7 +57,7 @@ export const MessageItem = React.memo(function MessageItem({
 
   const handleMessageHoverPopup = (e) => {
     e.stopPropagation();
-    setStoreMessageId(message._id);
+    setStoreMessageId(message._id); //thats create the issue of components re-render main is chatContainer
     setStoreMsgIdToSetDeleteMsgPopup(message._id);
     setIsMessageHoverPopup(true);
     setRightPopUp(null);
@@ -107,15 +111,15 @@ export const MessageItem = React.memo(function MessageItem({
       >
         <div
           ref={bubbleRef}
-          className={`max-w-[350px] w-full chat-bubble flex flex-col overflow-y-visible break-words whitespace-pre-wrap transition-all ${
+          className={`max-w-[350px] w-full chat-bubble flex flex-col  transition-all ${
             message.senderId === authUser?._id ? "bg-[#5251D4]" : "bg-gray-600"
           }`}
         >
           {!!message.isReply && (
-            <div className="border-l-[#a4a4f0] border-l-[5px] rounded-[5px] flex items-center justify-between gap-2 w-full my-2 py-2 px-2 bg-[#6767db7d]">
+            <div className="border-l-[#a4a4f0] border-l-[5px] rounded-[5px] flex items-center justify-between gap-2 w-[310px] my-2 py-2 px-2 bg-[#6767db7d]">
               <span>
                 <img
-                  className="w-8 h-6 rounded-full object-cover"
+                  className="w-[24px] h-[24px] rounded-full object-cover"
                   src={
                     message.replyTo?.receiverId === selectedUser
                       ? authUser.profilePic
@@ -126,13 +130,13 @@ export const MessageItem = React.memo(function MessageItem({
                   alt=""
                 />
               </span>
-              <span className="text-[12px] w-full line-clamp-2 break-words">
+              <span className="text-[12px] flex-1 line-clamp-2 break-words">
                 {message.replyTo?.text}
               </span>
               {!!message?.replyTo?.image && (
                 <span>
                   <img
-                    className="w-[60px] h-[46px] object-cover rounded-md"
+                    className="w-[40px] h-[35px] object-cover rounded-md"
                     src={message.replyTo?.image}
                     alt=""
                   />
@@ -148,10 +152,18 @@ export const MessageItem = React.memo(function MessageItem({
               className="sm:max-w-[350px] rounded-md mb-2"
             />
           )}
-
+          {/* 
           <div className="flex justify-between w-full gap-4">
             {message.text && (
               <p className="leading-none text-[15px]">{message.text}</p>
+            )}
+          </div>
+           */}
+          <div className="flex justify-between w-full gap-4">
+            {message.text && (
+              <p className="flex-1 text-[15px] leading-snug break-words whitespace-pre-wrap overflow-y-visible overflow-x-hidden">
+                {message.text}
+              </p>
             )}
           </div>
 

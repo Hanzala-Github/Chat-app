@@ -16,6 +16,8 @@ export function SelectImagePopup({
   const setShowPicker = useStates.getState().setShowPicker;
   const showPicker = useStates((state) => state.showPicker);
 
+  console.log("SelectImagePopup");
+
   // ..................This is the jsx return part....................//
   return (
     <motion.div

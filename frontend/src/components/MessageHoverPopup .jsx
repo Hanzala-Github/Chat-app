@@ -1,14 +1,18 @@
+// .......................................................................//
 import React from "react";
 import { motion } from "framer-motion";
 import { Reply, Copy, Save, Plus, Trash2 } from "lucide-react";
 import { useStates } from "../store/useStates";
-import { useChatStore } from "../store/useChatStore";
-import toast from "react-hot-toast";
+// import { useChatStore } from "../store/useChatStore";
+import { toast } from "sonner";
 import { useFunctions } from "../hooks/useFunctions";
 import { useAuthStore } from "../store/useAuthStore";
+import { useGetMessages } from "../hooks/useChatQueries";
 
 export function MessageHoverPopup() {
-  const messages = useChatStore((state) => state.messages);
+  // const messages = useChatStore((state) => state.messages);
+  const selectedUser = useStates((state) => state.selectedUser);
+  const { data: messages = [] } = useGetMessages(selectedUser);
   const popupPosition = useStates((state) => state.popupPosition);
   const popupPositionLeftRight = useStates(
     (state) => state.popupPositionLeftRight
