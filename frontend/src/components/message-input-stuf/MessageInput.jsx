@@ -14,14 +14,20 @@ import {
 } from "../component";
 import { useFunctions } from "../../hooks/useFunctions";
 import { useSendMessage } from "../../hooks/useChatQueries";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export const MessageInput = () => {
-  const [text, setText] = useState("");
+  // const [text, setText] = useState("");
+
   const [imagePreview, setImagePreview] = useState(null);
   const [inputDisabled, setInputDisabled] = useState(false);
   const fileInputRef = useRef(null);
+  const typingTimeout = useRef(null);
 
   // const sendMessage = useChatStore.getState().sendMessage;
+  const socket = useAuthStore((state) => state.socket);
+  const authUser = useAuthStore((state) => state.authUser);
+
   const selectedUser = useStates((state) => state.selectedUser);
   const sendMessageMutation = useSendMessage(selectedUser);
   const discardImage = useStates((state) => state.discardImage);
@@ -30,6 +36,10 @@ export const MessageInput = () => {
   const storeMessageIdOnReplyMessage = useStates(
     (state) => state.storeMessageIdOnReplyMessage
   );
+
+  const text = useStates((state) => state.text);
+  const setText = useStates.getState().setText;
+
   // console.log(isReplyChatOpen);
   // console.log("MessageInput");
   const setShowPicker = useStates.getState().setShowPicker;
@@ -96,8 +106,24 @@ export const MessageInput = () => {
   };
 
   const handleEmojiClick = (emojiObject) => {
-    setText((prev) => prev + emojiObject.emoji);
+    // setText((prev) => prev + emojiObject.emoji);
+    setText(text + emojiObject.emoji);
   };
+
+  const handleTyping = () => {
+    socket.emit("typing", { chatId: selectedUser, userId: authUser?._id });
+
+    if (typingTimeout.current) clearTimeout(typingTimeout.current);
+
+    typingTimeout.current = setTimeout(() => {
+      socket.emit("stop_typing", {
+        chatId: selectedUser,
+        userId: authUser?._id,
+      });
+    }, 2000);
+  };
+
+  // ..............This is the jsx return part.................//
 
   return (
     <div className="p-4 w-full flex items-end justify-center relative border-t border-base-300 h-auto flex-col">
@@ -107,8 +133,8 @@ export const MessageInput = () => {
         <SelectImagePopup
           imagePreview={imagePreview}
           removeImage={removeImage}
-          text={text}
-          setText={setText}
+          // text={text}
+          // setText={setText}
           handleSendMessage={handleSendMessage}
         />
       )}
@@ -133,12 +159,13 @@ export const MessageInput = () => {
           />
 
           <TextInputField
-            text={text}
-            setText={setText}
+            // text={text}
+            // setText={setText}
             showPicker={showPicker}
             setShowPicker={setShowPicker}
             inputDisabled={inputDisabled}
             fileInputRef={fileInputRef}
+            handleTyping={handleTyping}
           />
 
           <input
@@ -151,7 +178,7 @@ export const MessageInput = () => {
         </div>
 
         <SendButton
-          text={text}
+          // text={text}
           imagePreview={imagePreview}
           showPicker={showPicker}
           setShowPicker={setShowPicker}

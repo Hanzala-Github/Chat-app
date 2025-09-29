@@ -35,6 +35,13 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("typing", ({ chatId, userId }) => {
+    socket.to(chatId).emit("typing", { chatId, userId });
+  });
+  socket.on("stop_typing", ({ chatId, userId }) => {
+    socket.to(chatId).emit("stop_typing", { chatId, userId });
+  });
+
   // .......SeeMessageDubbleTicks....//
   // socket.on("SeeMessageDubbleTicks", ({ receiverId, messageId }) => {
   //   const receiverSocketId = userSocketMap[receiverId];

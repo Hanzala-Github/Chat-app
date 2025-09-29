@@ -8,13 +8,15 @@ export function SelectImagePopup({
   imagePreview,
   removeImage,
   // setShowPicker,
-  text,
-  setText,
+  // text,
+  // setText,
   handleSendMessage,
 }) {
   const setDiscardImage = useStates.getState().setDiscardImage;
   const setShowPicker = useStates.getState().setShowPicker;
   const showPicker = useStates((state) => state.showPicker);
+  const text = useStates((state) => state.text);
+  const setText = useStates.getState().setText;
 
   console.log("SelectImagePopup");
 

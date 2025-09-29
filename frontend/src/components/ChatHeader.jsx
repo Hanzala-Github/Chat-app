@@ -15,6 +15,11 @@ export const ChatHeader = () => {
 
   const onlineUsers = useAuthStore((state) => state.onlineUsers);
 
+  //------ typing indicaator---------//
+
+  const typingUsers = useStates((state) => state.typingUsers);
+  const typingUser = typingUsers[selectedUser];
+
   // ..........This is the jsx return part..............//
   return (
     <div className="p-2.5 border-b border-base-300">
@@ -40,7 +45,12 @@ export const ChatHeader = () => {
           <div>
             <h3 className="font-medium">{selectedUser?.fullName}</h3>
             <p className="text-sm text-base-content/70">
-              {onlineUsers.includes(selectedUser) ? "Online" : "Offline"}
+              {/* {onlineUsers.includes(selectedUser) ? "Online" : "Offline"} */}
+              {onlineUsers.includes(selectedUser)
+                ? typingUser
+                  ? "typing..."
+                  : "Online"
+                : "Offline"}
             </p>
           </div>
         </div>

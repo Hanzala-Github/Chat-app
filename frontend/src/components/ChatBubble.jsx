@@ -63,6 +63,20 @@ export const ChatBubble = React.memo(function ChatBubble() {
     };
   }, [socket, deleteMessageById]);
 
+  useEffect(() => {
+    socket.on("typing", ({ chatId, userId }) => {
+      useStates.getState().setTyping(chatId, userId, true);
+    });
+    socket.on("stop_typing", ({ chatId, userId }) => {
+      useStates.getState().setTyping(chatId, userId, false);
+    });
+
+    return () => {
+      socket.off("typing");
+      socket.off("stop_typing");
+    };
+  }, []);
+
   // compute whether selected msg was sent by authUser
   const findMsg =
     messages.filter((msg) => msg._id === storeMsgIdToSetDeleteMsgPopup)[0]

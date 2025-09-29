@@ -20,6 +20,7 @@ import {
 const ChatContainer = () => {
   // const selectedUser = useChatStore((state) => state.selectedUser);
   const selectedUser = useStates((state) => state.selectedUser);
+
   // const isMessagesLoading = useChatStore((state) => state.isMessagesLoading);
   // const getMessages = useChatStore.getState().getMessages;
 

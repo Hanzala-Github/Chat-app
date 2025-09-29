@@ -114,4 +114,18 @@ export const useStates = create((set) => ({
   // .............selectedUser...............//
   selectedUser: null,
   setSelectedUser: (selectedUser) => set({ selectedUser }),
+
+  // .............text.............//
+  text: "",
+  setText: (text) => set({ text: String(text ?? "") }),
+
+  // ..........typingUsers......................//
+  typingUsers: {}, // { chatId: userId }
+  setTyping: (chatId, userId, isTyping) =>
+    set((state) => ({
+      typingUsers: {
+        ...state.typingUsers,
+        [chatId]: isTyping ? userId : null,
+      },
+    })),
 }));
