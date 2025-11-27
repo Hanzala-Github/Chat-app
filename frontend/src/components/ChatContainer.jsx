@@ -18,36 +18,13 @@ import {
 
 // ............chatContainer component..............//
 const ChatContainer = () => {
-  // const selectedUser = useChatStore((state) => state.selectedUser);
   const selectedUser = useStates((state) => state.selectedUser);
-
-  // const isMessagesLoading = useChatStore((state) => state.isMessagesLoading);
-  // const getMessages = useChatStore.getState().getMessages;
 
   const { isLoading: isMessagesLoading } = useGetMessages(selectedUser);
 
-  // const subscribeToMessages = useChatStore.getState().subscribeToMessages;
-  // const unsubscribeFromMessages =
-  //   useChatStore.getState().unsubscribeFromMessages;
-
-  // const rightPopUp = useStates((state) => state.rightPopUp);
-  // const storeMessageId = useStates((state) => state.storeMessageId);
   const { handleClosePopup } = useFunctions();
 
   useSubscribeToMessages(selectedUser);
-
-  // useEffect(() => {
-  //   if (!selectedUser) return;
-  //   getMessages(selectedUser);
-  //   subscribeToMessages();
-  //   return () => unsubscribeFromMessages();
-  // }, [selectedUser]);
-
-  // const handleOuterClick = (e) => {
-  //   if (e.target.closest(".popup-content")) return;
-  //   console.log("HANDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDddd");
-  //   handleClosePopup(e);
-  // };
 
   if (isMessagesLoading) {
     return (
@@ -62,7 +39,6 @@ const ChatContainer = () => {
   // ...............This is the jsx return part...........//
   return (
     <div
-      // onClick={(rightPopUp || storeMessageId) && handleOuterClick}
       onClick={(e) => handleClosePopup(e)}
       className="flex-1 flex flex-col overflow-auto"
     >

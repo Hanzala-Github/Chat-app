@@ -22,3 +22,4 @@ export * from "./skeletons/MessageSkeleton";
 export * from "./MessageHoverPopup ";
 export * from "./ChatOptionsPopup";
 export * from "./MessageDeletePopup";
+export * from "./MessageTicks";

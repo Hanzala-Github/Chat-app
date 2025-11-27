@@ -2,7 +2,7 @@
 import React, { useRef } from "react";
 import { ChevronDown, Smile } from "lucide-react";
 import { formatMessageTime } from "../lib/utils";
-import { MessageHoverPopup } from "./component";
+import { MessageHoverPopup, MessageTicks } from "./component";
 import { useAuthStore } from "../store/useAuthStore";
 // import { useChatStore } from "../store/useChatStore";
 import { useStates } from "../store/useStates";
@@ -13,6 +13,8 @@ export const MessageItem = React.memo(function MessageItem({
   isLast,
   lastRef,
 }) {
+  console.log("MESSAGE", message);
+  console.log("MESSAGE_STATUS", message.status);
   const hoverRef = useRef(false);
   console.log("MessageItem component");
   const authUser = useAuthStore((state) => state.authUser);
@@ -111,7 +113,7 @@ export const MessageItem = React.memo(function MessageItem({
       >
         <div
           ref={bubbleRef}
-          className={`max-w-[350px] w-full chat-bubble flex flex-col  transition-all ${
+          className={`max-w-[350px] w-full chat-bubble flex flex-col transition-all  ${
             message.senderId === authUser?._id ? "bg-[#5251D4]" : "bg-gray-600"
           }`}
         >
@@ -159,12 +161,45 @@ export const MessageItem = React.memo(function MessageItem({
             )}
           </div>
            */}
-          <div className="flex justify-between w-full gap-4">
+          {/* <div className="flex justify-between max-w-[350px] w-full gap-4">
             {message.text && (
-              <p className="flex-1 text-[15px] leading-snug break-words whitespace-pre-wrap overflow-y-visible overflow-x-hidden">
+              <p className="flex-1 text-[15px] leading-snug break-words whitespace-pre-wrap overflow-y-visible overflow-x-hidden flex gap-5">
                 {message.text}
+                {message.senderId === authUser?._id && (
+                  <MessageTicks status={message.status} />
+                )}
               </p>
             )}
+          </div> */}
+
+          {/* <div className="max-w-[350px] w-full overflow-x-hidden overflow-y-auto">
+            <div className="flex gap-2 text-[15px] leading-snug relative justify-between">
+              <span className="flex-1 whitespace-pre-wrap break-all">
+                {message.text}
+              </span>
+
+              {message.senderId === authUser?._id && (
+                // inline-flex items-end
+                <span className="absolute right-0 bottom-0">
+                  <MessageTicks status={message.status} />
+                </span>
+              )}
+            </div>
+          </div> */}
+          <div className="max-w-[350px] w-full overflow-x-hidden overflow-y-auto">
+            <div className="relative text-[14px] leading-snug w-full">
+              {/* Text block */}
+              <span className="block pr-5 whitespace-pre-wrap break-words">
+                {message.text}
+              </span>
+
+              {/* Ticks – pinned bottom right */}
+              {message.senderId === authUser?._id && (
+                <span className="absolute right-1 bottom-0">
+                  <MessageTicks status={message.status} />
+                </span>
+              )}
+            </div>
           </div>
 
           {message?._id === storeMessageId && <MessageHoverPopup />}

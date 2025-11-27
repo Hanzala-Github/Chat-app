@@ -1,8 +1,14 @@
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import cloudinary from "../lib/cloudinary.js";
-import { getReceiverSocketId, io } from "../lib/socket.js";
-import mongoose from "mongoose";
+import {
+  emitToChatParticipants,
+  emitToUser,
+  getReceiverSocketId,
+  io,
+  // userSocketMap,
+} from "../lib/socket.js";
+import { generateChatId } from "../utils/generateChatId.js";
 
 const getUsersForSidebar = async (req, res) => {
   try {
@@ -93,6 +99,8 @@ const sendMessage = async (req, res, next) => {
         .json({ success: false, message: "Receiver not found" });
     }
 
+    const chatId = generateChatId(senderId, receiverId);
+
     let imageUrl = null;
     if (image) {
       const uploadResponse = await cloudinary.uploader.upload(image);
@@ -101,6 +109,7 @@ const sendMessage = async (req, res, next) => {
 
     // Create a new message (single message, no `messages` array)
     const newMessage = await Message.create({
+      chatId,
       senderId,
       receiverId,
       text,
@@ -108,29 +117,29 @@ const sendMessage = async (req, res, next) => {
       isReply,
       replyTo,
     });
-    // Optional: Populate replyTo so frontend instantly receives full reply message
     await newMessage.populate("replyTo");
 
-    // Emit real-time event via Socket.IO
+    // ---------------socket-------------------//
     const receiverSocketId = getReceiverSocketId(receiverId);
-    // if (receiverSocketId) {
-    //   io.to(receiverSocketId).emit("newMessage", {
-    //     _id: newMessage._id,
-    //     senderId: newMessage.senderId,
-    //     receiverId: newMessage.receiverId,
-    //     text: newMessage.text,
-    //     image: newMessage?.image,
-    //     createdAt: newMessage.createdAt,
-    //   });
-    // }
-    if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage);
-    }
+    if (receiverSocketId && receiverSocketId.length > 0) {
+      // const participantIds = [senderId.toString(), receiverId.toString()];
+      // emitToChatParticipants(participantIds, "receiveMessage", newMessage);
 
+      emitToChatParticipants(
+        [senderId.toString(), receiverId.toString()],
+        "newMessage",
+        newMessage
+      );
+    }
+    // if (receiverSocketId) {
+    //   io.to(receiverSocketId).emit("newMessage", newMessage);
+    // }
+    console.log(newMessage);
     return res.status(201).json({
       success: true,
       message: "Message sent successfully",
       data: newMessage,
+      receiverIsOnline: receiverSocketId.length > 0,
     });
   } catch (error) {
     console.error(`Error in sendMessage controller: ${error}`);

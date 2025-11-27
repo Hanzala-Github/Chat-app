@@ -5,10 +5,12 @@ import React, { useEffect, useRef } from "react";
 import { MessageItem } from "./MessageItem";
 import { useGetMessages } from "../hooks/useChatQueries";
 import { useStates } from "../store/useStates";
+// import { useAuthStore } from "../store/useAuthStore";
 
 export const MessageList = React.memo(function MessageList() {
   // const messages = useChatStore((state) => state.messages);
   const selectedUser = useStates((state) => state.selectedUser);
+  // const authUser = useAuthStore((state) => state.authUser);
 
   const { data: messages = [] } = useGetMessages(selectedUser);
   const messageEndRef = useRef(null);

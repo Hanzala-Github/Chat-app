@@ -8,6 +8,7 @@ import { ChatOptionsPopup, SidebarSkeleton } from "./component";
 import { useStates } from "../store/useStates";
 import { useFunctions } from "../hooks/useFunctions";
 import { useGetUsers } from "../hooks/useChatQueries";
+import { getChatId } from "../lib/utils";
 //........... sidebar component..................//
 export const Sidebar = () => {
   // const getUsers = useChatStore.getState().getUsers;
@@ -25,14 +26,30 @@ export const Sidebar = () => {
   const [activeColor, setactiveColor] = useState(false);
   const [searchContacts, setsearchContacts] = useState("");
 
+  const authUser = useAuthStore((state) => state.authUser);
   const setisShowCloseChat = useStates.getState().setisShowCloseChat;
-
   const setRightPopUp = useStates.getState().setRightPopUp;
-
   const rightPopUp = useStates((state) => state.rightPopUp);
   const setSingleMessageReply = useStates.getState().setSingleMessageReply;
   const setIsReplyChatOpen = useStates.getState().setIsReplyChatOpen;
+  const setDraft = useStates.getState().setDraft;
+  const drafts = useStates((state) => state.drafts);
+  console.log(drafts);
+  const text = useStates((state) => state.text);
+  const setText = useStates.getState().setText;
+  const draft = drafts[authUser._id]?.[selectedUser] || "";
+  console.log(draft);
+  const userDrafts = drafts[authUser._id] || {};
+  const userDraftKeys = Object.keys(userDrafts);
+  // console.log(Object.keys(userDrafts));
+  console.log(userDraftKeys.includes("67d7087342d1fa56f4f18349"));
+  console.log(userDraftKeys);
+  // const match = userDraftKeys.find((id) => id === "67d7087342d1fa56f4f18349");
+  // console.log(match);
 
+  // const draftChatIds = Object.keys(userDrafts);
+  // console.log(draftChatIds);
+  // console.log("draft", draft);
   const { handleClosePopup, handleMouseRight } = useFunctions();
 
   // useEffect(() => {
@@ -45,16 +62,68 @@ export const Sidebar = () => {
         user.fullName?.toLowerCase().includes(searchContacts.toLowerCase())
       );
 
+  // const handleSelectUser = (e, userId = null) => {
+  //   e.stopPropagation();
+  //   if (selectedUser === userId) {
+  //     setSelectedUser(null);
+  //     setRightPopUp(null);
+  //   } else {
+  //     setSelectedUser(userId);
+  //     setSingleMessageReply(null);
+  //     setIsReplyChatOpen(false);
+  //     setRightPopUp(null);
+  //     if (userId === userId) {
+  //       setisShowCloseChat(true);
+  //     }
+  //   }
+  // };
+
+  // const handleSelectUser = (e, userId = null) => {
+  //   e.stopPropagation();
+  //   if (selectedUser === userId) {
+  //     setSelectedUser(null);
+  //     setRightPopUp(null);
+  //   } else {
+  //     setSelectedUser(userId);
+  //     setDraft(authUser?._id, userId, text);
+  //     setSingleMessageReply(null);
+  //     setIsReplyChatOpen(false);
+  //     setRightPopUp(null);
+  //     if (userId === userId) {
+  //       setisShowCloseChat(true);
+  //       setText("");
+  //       // setDraft(null, null, null);
+  //     }
+  //   }
+  // };
+
   const handleSelectUser = (e, userId = null) => {
     e.stopPropagation();
+
+    // 1️⃣ If you were already on a chat, save its draft before switching
+
+    const chatId = getChatId(authUser._id, selectedUser);
+    if (selectedUser && selectedUser !== userId) {
+      setDraft(authUser?._id, chatId, text);
+    }
+
+    // 2️⃣ Switch the user
     if (selectedUser === userId) {
       setSelectedUser(null);
       setRightPopUp(null);
     } else {
       setSelectedUser(userId);
+      // 3️⃣ Load this user's draft if exists, otherwise empty string
+      const chatId = getChatId(authUser._id, userId);
+      // const draftText = storeSelectedUserAndText[authUser?._id]?.[userId] || "";
+      const draftText = drafts[authUser?._id]?.[chatId] || "";
+      setText(draftText);
+
+      // reset other states
       setSingleMessageReply(null);
       setIsReplyChatOpen(false);
       setRightPopUp(null);
+
       if (userId === userId) {
         setisShowCloseChat(true);
       }
@@ -113,7 +182,7 @@ export const Sidebar = () => {
         </div>
       </div>
 
-      <div onClick={handleClosePopup} className="overflow-y-auto w-full py-3 ">
+      <div onClick={handleClosePopup} className="overflow-y-auto w-full py-3">
         {filteredUsers.map((user) => (
           <div
             key={user?._id}
@@ -140,11 +209,11 @@ export const Sidebar = () => {
             )}
 
             {/* Profile Picture & Online Status */}
-            <div className="relative mx-auto lg:mx-0 ">
+            <div className="relative mx-auto lg:mx-0 w-[49px]">
               <img
                 src={user.profilePic || "/avatar.png"}
                 alt={user.name}
-                className="size-12 object-cover rounded-full"
+                className="size-12 object-cover rounded-full w-full"
               />
               {onlineUsers.includes(user._id) && (
                 <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
@@ -152,10 +221,43 @@ export const Sidebar = () => {
             </div>
 
             {/* User Info */}
-            <div className="hidden lg:block text-left min-w-0">
-              <div className="font-medium truncate">{user?.fullName}</div>
-              <div className="text-sm text-zinc-400">
-                {onlineUsers.includes(user?._id) ? "Online" : "Offline"}
+            <div className="hidden lg:block text-left w-[187px] flex-shrink-0">
+              {/* Name */}
+              <div className="font-medium truncate block w-full">
+                {user?.fullName}
+              </div>
+
+              {/* Status or Draft */}
+              {/* <div className="text-sm text-zinc-400 block w-full truncate">
+                {userDrafts[user?._id] &&
+                userDrafts[user?._id].trim() !== "" ? (
+                  <span className="text-[#c7c7c7]">
+                    <span className="text-green-500">Draft:</span>{" "}
+                    {userDrafts[user._id]}
+                  </span>
+                ) : onlineUsers.includes(user?._id) ? (
+                  "Online"
+                ) : (
+                  "Offline"
+                )}
+              </div> */}
+              <div className="text-sm text-zinc-400 block w-full truncate">
+                {(() => {
+                  // Always generate chatId between the logged-in user and this list user
+                  const chatId = getChatId(authUser._id, user?._id);
+
+                  const draft = userDrafts[chatId];
+
+                  if (draft && draft.trim() !== "") {
+                    return (
+                      <span className="text-[#c7c7c7]">
+                        <span className="text-green-500">Draft:</span> {draft}
+                      </span>
+                    );
+                  }
+
+                  return onlineUsers.includes(user?._id) ? "Online" : "Offline";
+                })()}
               </div>
             </div>
           </div>
@@ -167,3 +269,5 @@ export const Sidebar = () => {
     </aside>
   );
 };
+
+// i switch the other user so the draft message is cancel the thing is that i change the selectedUser ike new userId i enter

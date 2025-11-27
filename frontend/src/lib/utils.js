@@ -13,3 +13,7 @@ export function formatMessageTime(date) {
     hour12: true,
   });
 }
+
+export const getChatId = (user1Id, user2Id) => {
+  return [user1Id, user2Id].sort().join("_");
+};

@@ -15,6 +15,7 @@ import {
 import { useFunctions } from "../../hooks/useFunctions";
 import { useSendMessage } from "../../hooks/useChatQueries";
 import { useAuthStore } from "../../store/useAuthStore";
+import { getChatId } from "../../lib/utils";
 
 export const MessageInput = () => {
   // const [text, setText] = useState("");
@@ -37,6 +38,9 @@ export const MessageInput = () => {
     (state) => state.storeMessageIdOnReplyMessage
   );
 
+  const setStoreMessageIdOnReplyMessage =
+    useStates.getState().setStoreMessageIdOnReplyMessage;
+
   const text = useStates((state) => state.text);
   const setText = useStates.getState().setText;
 
@@ -44,6 +48,8 @@ export const MessageInput = () => {
   // console.log("MessageInput");
   const setShowPicker = useStates.getState().setShowPicker;
   const showPicker = useStates((state) => state.showPicker);
+  const isSending = useStates((state) => state.isSending);
+  const setIsSending = useStates.getState().setIsSending;
   const { handleShowPicker } = useFunctions();
   console.log({ imagePreview, discardImage });
   console.log("MessageInput");
@@ -77,17 +83,10 @@ export const MessageInput = () => {
   const handleSendMessage = async (e) => {
     e.stopPropagation();
     e.preventDefault();
+    if (isSending) return;
     if (!text.trim() && !imagePreview) return;
-
+    setIsSending(true);
     try {
-      // await sendMessage({
-      //   text: text.trim(),
-      //   image: imagePreview,
-      //   ...(storeMessageIdOnReplyMessage && {
-      //     isReply: true,
-      //     replyTo: storeMessageIdOnReplyMessage,
-      //   }),
-      // });
       await sendMessageMutation.mutateAsync({
         text: text.trim(),
         image: imagePreview,
@@ -102,6 +101,10 @@ export const MessageInput = () => {
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
       console.error("Failed to send message:", error);
+    } finally {
+      setIsSending(false);
+      // ------new................//
+      setStoreMessageIdOnReplyMessage(null);
     }
   };
 
@@ -111,13 +114,18 @@ export const MessageInput = () => {
   };
 
   const handleTyping = () => {
-    socket.emit("typing", { chatId: selectedUser, userId: authUser?._id });
+    const chatId = getChatId(authUser?._id, selectedUser);
+
+    socket.emit("typing", {
+      chatId,
+      userId: authUser?._id,
+    });
 
     if (typingTimeout.current) clearTimeout(typingTimeout.current);
 
     typingTimeout.current = setTimeout(() => {
       socket.emit("stop_typing", {
-        chatId: selectedUser,
+        chatId,
         userId: authUser?._id,
       });
     }, 2000);

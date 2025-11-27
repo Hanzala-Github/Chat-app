@@ -1,5 +1,5 @@
 import React from "react";
-import { Send } from "lucide-react";
+import { Loader2, Send } from "lucide-react";
 import { useStates } from "../../store/useStates";
 
 export const SendButton = ({
@@ -11,6 +11,7 @@ export const SendButton = ({
   setIsReplyChatOpen,
 }) => {
   const setSingleMessageReply = useStates.getState().setSingleMessageReply;
+  const isSending = useStates((state) => state.isSending);
   const text = useStates((state) => state.text);
   console.log("SendButton");
 
@@ -26,9 +27,15 @@ export const SendButton = ({
       }}
       type="submit"
       className="btn btn-sm btn-circle"
-      disabled={!text.trim() && !imagePreview}
+      // disabled={!text.trim() && !imagePreview}
+      disabled={isSending || (!text.trim() && !imagePreview)}
     >
       <Send size={22} />
+      {/* {isSending ? (
+        <Loader2 size={20} className="animate-spin" />
+      ) : (
+        <Send size={22} />
+      )} */}
     </button>
   );
 };

@@ -12,6 +12,7 @@ import { useGetMessages } from "../hooks/useChatQueries";
 export function MessageHoverPopup() {
   // const messages = useChatStore((state) => state.messages);
   const selectedUser = useStates((state) => state.selectedUser);
+  const authUser = useAuthStore((state) => state.authUser);
   const { data: messages = [] } = useGetMessages(selectedUser);
   const popupPosition = useStates((state) => state.popupPosition);
   const popupPositionLeftRight = useStates(
@@ -24,7 +25,6 @@ export function MessageHoverPopup() {
   const setStoreMessageIdOnReplyMessage =
     useStates.getState().setStoreMessageIdOnReplyMessage;
   const setShowDeletePopup = useStates.getState().setShowDeletePopup;
-  const authUser = useAuthStore((state) => state.authUser);
   console.log(authUser);
   const findMsg = messages.filter((msg) => msg._id === storeMessageId);
 
