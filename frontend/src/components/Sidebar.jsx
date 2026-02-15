@@ -34,16 +34,16 @@ export const Sidebar = () => {
   const setIsReplyChatOpen = useStates.getState().setIsReplyChatOpen;
   const setDraft = useStates.getState().setDraft;
   const drafts = useStates((state) => state.drafts);
-  console.log(drafts);
+  // console.log(drafts);
   const text = useStates((state) => state.text);
   const setText = useStates.getState().setText;
   const draft = drafts[authUser._id]?.[selectedUser] || "";
-  console.log(draft);
+  // console.log(draft);
   const userDrafts = drafts[authUser._id] || {};
   const userDraftKeys = Object.keys(userDrafts);
   // console.log(Object.keys(userDrafts));
-  console.log(userDraftKeys.includes("67d7087342d1fa56f4f18349"));
-  console.log(userDraftKeys);
+  // console.log(userDraftKeys.includes("67d7087342d1fa56f4f18349"));
+  // console.log(userDraftKeys);
   // const match = userDraftKeys.find((id) => id === "67d7087342d1fa56f4f18349");
   // console.log(match);
 
@@ -59,7 +59,7 @@ export const Sidebar = () => {
   const filteredUsers = showOnlineOnly
     ? users.filter((user) => onlineUsers.includes(user?._id))
     : users.filter((user) =>
-        user.fullName?.toLowerCase().includes(searchContacts.toLowerCase())
+        user.fullName?.toLowerCase().includes(searchContacts.toLowerCase()),
       );
 
   // const handleSelectUser = (e, userId = null) => {
@@ -212,9 +212,19 @@ export const Sidebar = () => {
             <div className="relative mx-auto lg:mx-0 w-[49px]">
               <img
                 src={user.profilePic || "/avatar.png"}
-                alt={user.name}
+                // alt={user.name}
+                alt="avatar"
                 className="size-12 object-cover rounded-full w-full"
               />
+              {/* <img
+                src={user.profilePic || "/avatar.png"}
+                alt={user.name}
+                className="size-12 object-cover rounded-full w-full"
+                onError={(e) => {
+                  e.currentTarget.src = "/avatar.png";
+                }}
+              /> */}
+
               {onlineUsers.includes(user._id) && (
                 <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
               )}

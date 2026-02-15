@@ -15,6 +15,8 @@ export function ReplyChat() {
   const selectedUser = useStates((state) => state.selectedUser);
   const setIsReplyChatOpen = useStates.getState().setIsReplyChatOpen;
   const singleMessageReply = useStates((state) => state.singleMessageReply);
+  const setStoreMessageIdOnReplyMessage =
+    useStates.getState().setStoreMessageIdOnReplyMessage;
   console.log(singleMessageReply);
 
   // ...............This is the jsx return part.............//
@@ -35,7 +37,7 @@ export function ReplyChat() {
             singleMessageReply[0]?.receiverId === selectedUser
               ? authUser?.profilePic
               : users.find(
-                  (user) => user?._id === singleMessageReply[0]?.senderId
+                  (user) => user?._id === singleMessageReply[0]?.senderId,
                 )?.profilePic
           }
           alt="avatar"
@@ -59,7 +61,11 @@ export function ReplyChat() {
 
         {/* Close button */}
         <span
-          onClick={() => setIsReplyChatOpen(false)}
+          onClick={() => {
+            setIsReplyChatOpen(false);
+            // -----new Added-- setStoreMessageIdOnReplyMessage------//
+            setStoreMessageIdOnReplyMessage(null);
+          }}
           className="w-full h-full hover:bg-[#576272] flex items-center justify-center"
         >
           <X size={15} className="border rounded-full" />

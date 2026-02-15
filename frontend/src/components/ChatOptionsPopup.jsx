@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { XCircle, Heart, Ban, Trash2, X } from "lucide-react";
+import { XCircle, Heart, Ban, Trash2, X, CircleMinus } from "lucide-react";
 import { useStates } from "../store/useStates";
 import { useFunctions } from "../hooks/useFunctions";
 
@@ -24,7 +24,8 @@ export function ChatOptionsPopup({ handleSelectUser }) {
           onClick={handleDeleteMessagesHis}
           className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]"
         >
-          <XCircle size={16} /> Clear Messages
+          {/* <XCircle size={16} /> Clear Messages */}
+          <CircleMinus size={16} /> <span>Clear chat</span>
         </button>
       )}
       <button className="flex items-center gap-2 w-full px-2 py-1 hover:bg-[#22262d] rounded-[5px]">

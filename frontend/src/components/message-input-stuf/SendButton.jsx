@@ -1,41 +1,56 @@
 import React from "react";
-import { Loader2, Send } from "lucide-react";
+import { Mic, Send, Loader2 } from "lucide-react";
 import { useStates } from "../../store/useStates";
+import { useVoiceRecorder } from "../../hooks/useVoiceRecorder";
 
 export const SendButton = ({
-  // text,
   imagePreview,
   showPicker,
   setShowPicker,
-  // setSingleMessageReply,
   setIsReplyChatOpen,
 }) => {
+  const isSending = useStates((s) => s.isSending);
+  const text = useStates((s) => s.text);
+  const setIsRecordingStart = useStates.getState().setIsRecordingStart;
   const setSingleMessageReply = useStates.getState().setSingleMessageReply;
-  const isSending = useStates((state) => state.isSending);
-  const text = useStates((state) => state.text);
-  console.log("SendButton");
+  // const { startRecording } = useVoiceRecorder();
 
-  if (!text.length && !imagePreview) return null;
+  const hasContent = text.trim() || imagePreview;
 
+  const cleanup = (e) => {
+    e.stopPropagation();
+    if (showPicker) setShowPicker(false);
+    setSingleMessageReply(null);
+    setIsReplyChatOpen(false);
+  };
+
+  // SEND BUTTON
+  if (hasContent) {
+    return (
+      <button
+        type="submit"
+        className="btn btn-sm btn-circle"
+        disabled={isSending}
+        onClick={cleanup}
+      >
+        {isSending ? <Loader2 className="animate-spin" /> : <Send size={22} />}
+      </button>
+    );
+  }
+
+  // MIC BUTTON
   return (
     <button
-      onClick={(e) => {
-        e.stopPropagation();
-        if (showPicker) setShowPicker(false);
-        setSingleMessageReply(null);
-        setIsReplyChatOpen(false);
-      }}
-      type="submit"
+      type="button"
       className="btn btn-sm btn-circle"
-      // disabled={!text.trim() && !imagePreview}
-      disabled={isSending || (!text.trim() && !imagePreview)}
+      disabled={isSending}
+      onClick={(e) => {
+        cleanup(e);
+        // startRecording();
+        setIsRecordingStart(true);
+      }}
     >
-      <Send size={22} />
-      {/* {isSending ? (
-        <Loader2 size={20} className="animate-spin" />
-      ) : (
-        <Send size={22} />
-      )} */}
+      <Mic />
     </button>
   );
 };

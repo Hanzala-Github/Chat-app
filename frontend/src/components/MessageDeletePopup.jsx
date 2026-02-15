@@ -1,10 +1,15 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { useStates } from "../store/useStates";
+// import { useStates } from "../store/useStates";
 // import { useChatStore } from "../store/useChatStore";
 
-export function MessageDeletePopup({ deletedData, MsgText, deleteBtn }) {
-  const setShowDeletePopup = useStates.getState().setShowDeletePopup;
+export function MessageDeletePopup({
+  deletedData,
+  MsgText,
+  deleteBtn,
+  cancelBtn,
+}) {
+  // const setShowDeletePopup = useStates.getState().setShowDeletePopup;
   // const deleteMessageForMe = useChatStore.getState().deleteMessageForMe;
 
   // ..............This is the jsx return part................//
@@ -20,13 +25,14 @@ export function MessageDeletePopup({ deletedData, MsgText, deleteBtn }) {
         </div>
         <div className="flex items-center justify-between gap-2.5 bg-[#161617] w-full p-6">
           {deleteBtn}
-          <button
+          {cancelBtn}
+          {/* <button
             onClick={() => setShowDeletePopup(false)}
             type="button"
             className="flex-1 bg-[#3b3b3c52] rounded-[6px] py-[7px] text-[13px]"
           >
             Cancel
-          </button>
+          </button> */}
         </div>
       </div>
     </motion.div>

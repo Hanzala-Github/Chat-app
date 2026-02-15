@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Camera, Mail, User } from "lucide-react";
+// import { toast } from "sonner";
 
 export const ProfilePage = () => {
   // const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
@@ -25,6 +26,46 @@ export const ProfilePage = () => {
       await updateProfile({ profilePic: base64Image });
     };
   };
+
+  // const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+  // const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+  // const handleImageUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+
+  //   /* ---------- VALIDATION ---------- */
+  //   if (!ALLOWED_TYPES.includes(file.type)) {
+  //     // alert("Only JPG, PNG or WEBP images are allowed");
+  //     toast.success("Only JPG, PNG or WEBP images are allowed");
+  //     return;
+  //   }
+
+  //   if (file.size > MAX_FILE_SIZE) {
+  //     alert("Image must be less than 2MB");
+  //     return;
+  //   }
+
+  //   const reader = new FileReader();
+
+  //   reader.onloadend = async () => {
+  //     try {
+  //       const base64Image = reader.result;
+
+  //       // preview instantly
+  //       setSelectedImg(base64Image);
+
+  //       // upload
+  //       await updateProfile({ profilePic: base64Image });
+  //     } catch (error) {
+  //       console.error("Profile upload failed", error);
+  //       alert("Failed to update profile picture");
+  //       setSelectedImg(null);
+  //     }
+  //   };
+
+  //   reader.readAsDataURL(file);
+  // };
 
   return (
     <div className="h-screen pt-20">

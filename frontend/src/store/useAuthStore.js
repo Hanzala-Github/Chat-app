@@ -3,9 +3,9 @@ import { create } from "zustand";
 import axios from "../lib/axios";
 import { toast } from "sonner";
 import { io } from "socket.io-client";
+// import { useQueryClient } from "@tanstack/react-query";
 
 const BASE_URL = "http://localhost:5000";
-
 export const useAuthStore = create((set, get) => ({
   authUser: null,
   isSigningUp: false,
@@ -111,6 +111,12 @@ export const useAuthStore = create((set, get) => ({
     });
 
     set({ socket });
+
+    set({ socket });
+    console.log(
+      "Socket + Socket + Socket + Socket + Socket + Socket + Socket + Socket + Socket + ",
+      socket,
+    );
 
     socket.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });

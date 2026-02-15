@@ -35,19 +35,19 @@ export const Navbar = () => {
               
               `}
             >
-              <Settings className="w-4 h-4" />
+              <Settings className="w-4 h-4" aria-label="Setting" />
               <span className="hidden sm:inline">Settings</span>
             </Link>
 
             {authUser && (
               <>
                 <Link to={"/profile"} className={`btn btn-sm gap-2`}>
-                  <User className="size-5" />
+                  <User className="size-5" aria-label="User" />
                   <span className="hidden sm:inline">Profile</span>
                 </Link>
 
                 <button className="flex gap-2 items-center" onClick={logout}>
-                  <LogOut className="size-5" />
+                  <LogOut className="size-5" aria-label="Logout" />
                   <span className="hidden sm:inline">Logout</span>
                 </button>
               </>

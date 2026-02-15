@@ -143,63 +143,137 @@ const Logout = async (req, res, next) => {
 
 // ..........updateProfile controller..............//
 
+// const updateProfile = async (req, res, next) => {
+//   const { profilePic } = req.body;
+//   const userId = req.user?._id;
+
+//   try {
+//     if (!profilePic) {
+//       return res
+//         .status(400)
+//         .json({ success: false, message: "Profile picture is required" });
+//     }
+
+//     // Validate that profilePic is a valid Base64 string or URL
+//     if (
+//       typeof profilePic !== "string" ||
+//       (!profilePic.startsWith("data:image/") && !profilePic.startsWith("http"))
+//     ) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Invalid profile picture format",
+//       });
+//     }
+
+//     // Upload to Cloudinary
+//     const uploadResponse = await cloudinary.uploader.upload(profilePic, {
+//       folder: "profile_pictures",
+//       transformation: [{ width: 500, height: 500, crop: "limit" }],
+//     });
+
+//     if (!uploadResponse?.secure_url) {
+//       return res.status(500).json({
+//         success: false,
+//         message: "Failed to upload profile picture",
+//       });
+//     }
+
+//     // Update User Profile
+//     const updatedUser = await User.findByIdAndUpdate(
+//       userId,
+//       { profilePic: uploadResponse?.secure_url },
+//       { new: true, select: "-password" }
+//     );
+
+//     if (!updatedUser) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
+
+//     return res.status(200).json({
+//       success: true,
+//       user: updatedUser,
+//       message: "Profile updated successfully",
+//     });
+//   } catch (error) {
+//     console.error("Error in updateProfile controller:", error.message);
+//     return next(error);
+//   }
+// };
+
 const updateProfile = async (req, res, next) => {
   const { profilePic } = req.body;
   const userId = req.user?._id;
 
   try {
-    if (!profilePic) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Profile picture is required" });
+    /* ---------------- AUTH CHECK ---------------- */
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
     }
 
-    // Validate that profilePic is a valid Base64 string or URL
-    if (
-      typeof profilePic !== "string" ||
-      (!profilePic.startsWith("data:image/") && !profilePic.startsWith("http"))
-    ) {
+    if (!profilePic || typeof profilePic !== "string") {
       return res.status(400).json({
         success: false,
-        message: "Invalid profile picture format",
+        message: "Profile picture is required",
       });
     }
 
-    // Upload to Cloudinary
-    const uploadResponse = await cloudinary.uploader.upload(profilePic, {
-      folder: "profile_pictures",
-      transformation: [{ width: 500, height: 500, crop: "limit" }],
-    });
-
-    if (!uploadResponse?.secure_url) {
-      return res.status(500).json({
-        success: false,
-        message: "Failed to upload profile picture",
-      });
-    }
-
-    // Update User Profile
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { profilePic: uploadResponse?.secure_url },
-      { new: true, select: "-password" }
-    );
-
-    if (!updatedUser) {
+    const user = await User.findById(userId);
+    if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
 
+    let finalProfilePic = profilePic;
+
+    /* ---------------- BASE64 UPLOAD ---------------- */
+    if (profilePic.startsWith("data:image/")) {
+      // delete old image (if exists)
+      if (user.profilePic?.includes("cloudinary")) {
+        const publicId = user.profilePic
+          .split("/")
+          .slice(-2)
+          .join("/")
+          .split(".")[0];
+
+        await cloudinary.uploader.destroy(publicId);
+      }
+
+      const uploadResponse = await cloudinary.uploader.upload(profilePic, {
+        folder: "profile_pictures",
+        transformation: [
+          { width: 400, height: 400, crop: "fill", gravity: "face" },
+          { quality: "auto", fetch_format: "auto" },
+        ],
+      });
+
+      finalProfilePic = uploadResponse.secure_url;
+    }
+
+    /* ---------------- UPDATE USER ---------------- */
+    user.profilePic = finalProfilePic;
+    await user.save();
+
     return res.status(200).json({
       success: true,
-      user: updatedUser,
+      user: {
+        _id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        profilePic: user.profilePic,
+      },
       message: "Profile updated successfully",
     });
   } catch (error) {
-    console.error("Error in updateProfile controller:", error.message);
-    return next(error);
+    console.error("Error in updateProfile controller:", error);
+    next(error);
   }
 };
 

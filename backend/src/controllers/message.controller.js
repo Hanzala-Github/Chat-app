@@ -9,6 +9,7 @@ import {
   // userSocketMap,
 } from "../lib/socket.js";
 import { generateChatId } from "../utils/generateChatId.js";
+import { deleteLocalVoiceFile } from "../utils/deleteLocalVoiceFile .js";
 
 const getUsersForSidebar = async (req, res) => {
   try {
@@ -25,7 +26,7 @@ const getUsersForSidebar = async (req, res) => {
     // }).select("-password");
     const filteredUsers = await User.find(
       { _id: { $ne: loggedInUser } },
-      { password: 0 }
+      { password: 0 },
     ).lean();
 
     return res.status(200).json({
@@ -77,14 +78,14 @@ const getMessages = async (req, res) => {
 const sendMessage = async (req, res, next) => {
   const { id: receiverId } = req.params;
   const senderId = req.user?._id;
-  const { text, image, isReply, replyTo } = req.body;
-
+  const { text, image, isReply, replyTo, duration } = req.body;
+  console.log({ receiverId, text });
   try {
     if (!senderId) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    if (!receiverId || (!text && !image)) {
+    if (!receiverId) {
       return res.status(400).json({
         success: false,
         message: "Receiver ID and message content are required",
@@ -107,6 +108,19 @@ const sendMessage = async (req, res, next) => {
       imageUrl = uploadResponse?.secure_url;
     }
 
+    let voiceData = null;
+    if (req.file) {
+      const voiceUrl = `http://localhost:${process.env.PORT}/uploads/voices/${req.file.filename}`;
+      const voiceDuration = duration ? Number(duration) : 0;
+      // voiceData = { url: voiceUrl, duration: voiceDuration };
+      voiceData = {
+        url: voiceUrl,
+        duration: voiceDuration,
+        mimeType: req.file.mimetype,
+        size: req.file.size,
+      };
+    }
+
     // Create a new message (single message, no `messages` array)
     const newMessage = await Message.create({
       chatId,
@@ -114,6 +128,8 @@ const sendMessage = async (req, res, next) => {
       receiverId,
       text,
       image: imageUrl,
+      voice: voiceData,
+      type: req.file ? "voice" : image ? "image" : "text",
       isReply,
       replyTo,
     });
@@ -121,14 +137,14 @@ const sendMessage = async (req, res, next) => {
 
     // ---------------socket-------------------//
     const receiverSocketId = getReceiverSocketId(receiverId);
-    if (receiverSocketId && receiverSocketId.length > 0) {
+    if (receiverSocketId || receiverSocketId.length > 0) {
       // const participantIds = [senderId.toString(), receiverId.toString()];
       // emitToChatParticipants(participantIds, "receiveMessage", newMessage);
 
       emitToChatParticipants(
         [senderId.toString(), receiverId.toString()],
         "newMessage",
-        newMessage
+        newMessage,
       );
     }
     // if (receiverSocketId) {
@@ -162,10 +178,18 @@ const deleteMessagesHistory = async (req, res) => {
           { senderId: id, receiverId: myId },
         ],
       },
-      { $addToSet: { deletedBy: myId } } // Add myId to deletedBy array
+      { $addToSet: { deletedBy: myId } }, // Add myId to deletedBy array
     );
 
-    await Message.deleteMany({
+    // const messagesToDelete = await Message.deleteMany({
+    //   $or: [
+    //     { senderId: myId, receiverId: id },
+    //     { senderId: id, receiverId: myId },
+    //   ],
+    //   $expr: { $eq: [{ $size: "$deletedBy" }, 2] },
+    // });
+    // Find messages that BOTH deleted
+    const messagesToDelete = await Message.find({
       $or: [
         { senderId: myId, receiverId: id },
         { senderId: id, receiverId: myId },
@@ -173,10 +197,19 @@ const deleteMessagesHistory = async (req, res) => {
       $expr: { $eq: [{ $size: "$deletedBy" }, 2] },
     });
 
+    for (const msg of messagesToDelete) {
+      if (msg.type === "voice") {
+        deleteLocalVoiceFile(msg.voice);
+      }
+    }
+
+    await Message.deleteMany({
+      _id: { $in: messagesToDelete.map((m) => m._id) },
+    });
+
     return res.status(200).json({
       success: true,
-      message:
-        "Messages hidden for you. Deleted permanently if both have cleared.",
+      message: "Messages deleted permanently",
     });
   } catch (error) {
     console.error(`Error in deleteMessagesHistory controller:`, error);
@@ -188,33 +221,6 @@ const deleteMessagesHistory = async (req, res) => {
 
 // ..................deleteSingleMessage....................//
 const deleteMessageForMe = async (req, res) => {
-  // const { messageId } = req.params;
-  // const myId = req.user._id;
-
-  // try {
-
-  // .........This is my old code but best code.......//
-  // await Message.updateOne(
-  //   { _id: messageId },
-  //   {
-  //     $addToSet: { deletedBy: myId.toString() },
-  //   }
-  // );
-  // await Message.updateOne({ replyTo: messageId }, { isReply: false });
-  // await Message.deleteOne({
-  //   _id: messageId,
-  //   $expr: { $eq: [{ $size: "$deletedBy" }, 2] },
-  // });
-  // return res
-  //   .status(200)
-  //   .json({ success: true, message: "Message delete for you successfully" });
-  // } catch (error) {
-  //   console.error("Error in deleteMessageForMe:", error);
-  //   return res
-  //     .status(500)
-  //     .json({ success: false, message: "Internal Server Error" });
-  // }
-
   try {
     const { messageId } = req.params;
     const userId = req.user._id;
@@ -232,7 +238,7 @@ const deleteMessageForMe = async (req, res) => {
 
     // Push user to deletedBy array
     message.deletedBy.push(userId);
-
+    await message.save();
     if (message.deletedBy.length < 2) {
       // Case 1: First user deletes → Just save
       await message.save();
@@ -242,7 +248,7 @@ const deleteMessageForMe = async (req, res) => {
       // First, update any messages that reply to this one
       await Message.updateMany(
         { replyTo: messageId },
-        { $set: { isReply: false, replyTo: null } }
+        { $set: { isReply: false, replyTo: null } },
       );
 
       // Then delete the original message
@@ -272,6 +278,10 @@ const deleteMessageForEveryOne = async (req, res) => {
         success: false,
         message: "You are not authorized to delete this message for everyone",
       });
+    }
+
+    if (message.type === "voice") {
+      deleteLocalVoiceFile(message.voice);
     }
 
     await Message.findByIdAndDelete(messageId);

@@ -24,7 +24,7 @@ const ChatContainer = () => {
 
   const { handleClosePopup } = useFunctions();
 
-  useSubscribeToMessages(selectedUser);
+  // useSubscribeToMessages(selectedUser);
 
   if (isMessagesLoading) {
     return (

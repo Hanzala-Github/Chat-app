@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { Navbar } from "./components/component";
+import {
+  LogoutController,
+  Navbar,
+  SocketController,
+} from "./components/component";
 import { useThemeStore } from "./store/useThemeStore";
 import {
   HomePage,
@@ -18,7 +22,7 @@ import { useAuthStore } from "./store/useAuthStore";
 
 const App = () => {
   // const { data: authUser, isLoading: isCheckingAuth } = useCheckAuth();
-  const authUser = useAuthStore((state) => state.authUser);
+  const authUser = useAuthStore((state) => state.authUser); //POINT
   const checkAuth = useAuthStore.getState().checkAuth;
   const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth);
 
@@ -52,6 +56,8 @@ const App = () => {
 
   return (
     <div data-theme={theme}>
+      <SocketController />
+      {/* <LogoutController /> */}
       <Toaster richColors position="bottom-right" />
       <Navbar />
       <Routes>

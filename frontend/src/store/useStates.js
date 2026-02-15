@@ -227,7 +227,7 @@ export const useStates = create((set) => ({
     set((state) => {
       const msgs = state.messages[chatId] || [];
       const updated = msgs.map((msg) =>
-        msg._id === messageId ? { ...msg, status } : msg
+        msg._id === messageId ? { ...msg, status } : msg,
       );
       return { messages: { ...state.messages, [chatId]: updated } };
     }),
@@ -239,4 +239,31 @@ export const useStates = create((set) => ({
       const updated = msgs.map((m) => ({ ...m, status: "seen" }));
       return { messages: { ...state.messages, [chatId]: updated } };
     }),
+  // ----------------isRecordingStart-------------------//
+  // isRecording: false,
+  // setIsRecording: (val) => set({ isRecording: val }),
+  isRecordingStart: false,
+  setIsRecordingStart: (val) => set({ isRecordingStart: val }),
+
+  messagesByChat: {},
+  setMessages(chatId, messages) {
+    set((state) => {
+      const existing = state.messagesByChat[chatId];
+
+      // If already have messages, DO NOTHING
+      if (existing && Object.keys(existing).length === messages.length) {
+        return state; // 🔥 THIS BREAKS THE LOOP
+      }
+
+      const map = {};
+      messages.forEach((m) => (map[m._id] = m));
+
+      return {
+        messagesByChat: {
+          ...state.messagesByChat,
+          [chatId]: map,
+        },
+      };
+    });
+  },
 }));

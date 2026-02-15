@@ -24,7 +24,7 @@ export function MessageTicks({ status }) {
 
   if (status === "seen") {
     return (
-      <span className={`${baseClass} text-blue-500`}>
+      <span className={`${baseClass} text-green-300`}>
         ✓<span className="-ml-[3px]">✓</span>
       </span>
     );

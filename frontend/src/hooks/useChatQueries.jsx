@@ -188,6 +188,7 @@
 //     };
 //   }, [userId, queryClient]);
 // }
+// -------------22222222222---------------//
 
 import axios from "../lib/axios";
 import { toast } from "sonner";
@@ -229,11 +230,16 @@ export function useGetMessages(selectedUserId) {
     onError: (error) => {
       console.error("Error fetching messages:", error);
     },
+    // onSuccess: (data) => {
+    //   console.log(data);
+    // },
   });
 }
 
 // -------------------- useSendMessage -------------------- //
+
 export function useSendMessage(selectedUserId) {
+  console.log("NNNNNNNNNNNAAAAAAAAKKKKKKKKKAAAAAAA", selectedUserId);
   const authUser = useAuthStore((s) => s.authUser);
   const chatId = getChatId(authUser._id, selectedUserId);
   // const socket = useAuthStore((state) => state.socket);
@@ -242,30 +248,25 @@ export function useSendMessage(selectedUserId) {
 
   return useMutation({
     mutationFn: async (messageData) => {
-      console.log("SSSSSSSEEEEEEEEEEEEEEEENNNNNNNNNNDDDDDDDD", messageData);
       const res = await axios.post(
         `/message/send/${selectedUserId}`,
-        messageData
+        messageData,
+        { headers: { "Content-Type": "multipart/form-data" } },
       );
       // return res?.data?.data;
       return res?.data;
     },
 
-    onSuccess: (newMessage) => {
-      // console.log(
-      //   "newMessagenewMessagenewMessagenewMessagenewMessagenewMessage",
-      //   newMessage.receiverIsOnline
-      // );
-
-      if (!newMessage.receiverIsOnline) {
-        queryClient.setQueryData(["messages", chatId], (old = []) => [
-          ...old,
-          newMessage?.data,
-          // newMessage,
-        ]);
-      }
-    },
-
+    // onSuccess: (newMessage) => {
+    //   if (!newMessage.receiverIsOnline) {
+    //     queryClient.setQueryData(["messages", chatId], (old = []) => [
+    //       ...old,
+    //       newMessage?.data,
+    //       // newMessage,
+    //     ]);
+    //   }
+    // },
+    // onSuccess: () => {},
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Error sending message");
     },
@@ -303,12 +304,12 @@ export function useDeleteMessageById(selectedUserId) {
     queryClient.setQueryData(
       // ["messages", authUser?._id, selectedUserId],
       ["messages", chatId],
-      (old = []) => old.filter((msg) => msg._id !== messageId)
+      (old = []) => old.filter((msg) => msg._id !== messageId),
     );
   };
 }
 
-// -------------------- useDeleteMessageForMe -------------------- //
+// ------------- useDeleteMessageForMe ------------ //
 export function useDeleteMessageForMe() {
   const queryClient = useQueryClient();
 
@@ -343,7 +344,7 @@ export function useDeleteMessageForEveryone(selectedUserId) {
       queryClient.setQueryData(
         // ["messages", authUser?._id, selectedUserId],
         ["messages", chatId],
-        (old = []) => old.filter((msg) => msg._id !== messageId)
+        (old = []) => old.filter((msg) => msg._id !== messageId),
       );
     },
   });

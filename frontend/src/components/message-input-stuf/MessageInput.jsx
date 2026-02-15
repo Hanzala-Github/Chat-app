@@ -11,11 +11,14 @@ import {
   SelectImagePopup,
   SendButton,
   TextInputField,
+  VoiceRecorder,
 } from "../component";
 import { useFunctions } from "../../hooks/useFunctions";
 import { useSendMessage } from "../../hooks/useChatQueries";
 import { useAuthStore } from "../../store/useAuthStore";
 import { getChatId } from "../../lib/utils";
+import { Mic } from "lucide-react";
+// import { useVoiceRecorder } from "../../hooks/useVoiceRecorder";
 
 export const MessageInput = () => {
   // const [text, setText] = useState("");
@@ -50,9 +53,11 @@ export const MessageInput = () => {
   const showPicker = useStates((state) => state.showPicker);
   const isSending = useStates((state) => state.isSending);
   const setIsSending = useStates.getState().setIsSending;
+  // const isRecording = useStates((state) => state.isRecording);
+  // const { recording } = useVoiceRecorder();
+  const isRecordingStart = useStates((state) => state.isRecordingStart);
   const { handleShowPicker } = useFunctions();
-  console.log({ imagePreview, discardImage });
-  console.log("MessageInput");
+
   // Disable text input if image is selected
   useEffect(() => {
     setInputDisabled(!!imagePreview);
@@ -108,6 +113,30 @@ export const MessageInput = () => {
     }
   };
 
+  const handleSendVoiceMessage = async (voiceBlob, duration) => {
+    if (isSending) return;
+
+    setIsSending(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("voice", voiceBlob, "voice-message.webm");
+      formData.append("duration", duration);
+
+      if (storeMessageIdOnReplyMessage) {
+        formData.append("isReply", "true");
+        formData.append("replyTo", storeMessageIdOnReplyMessage);
+      }
+
+      await sendMessageMutation.mutateAsync(formData);
+    } catch (error) {
+      console.error("Failed to send voice message:", error);
+    } finally {
+      setIsSending(false);
+      setStoreMessageIdOnReplyMessage(null);
+    }
+  };
+
   const handleEmojiClick = (emojiObject) => {
     // setText((prev) => prev + emojiObject.emoji);
     setText(text + emojiObject.emoji);
@@ -130,72 +159,86 @@ export const MessageInput = () => {
       });
     }, 2000);
   };
-
+  console.log(
+    isRecordingStart,
+    "isRecordingStartisRecordingStartisRecordingStartisRecordingStartisRecordingStart"
+  );
   // ..............This is the jsx return part.................//
 
   return (
     <div className="p-4 w-full flex items-end justify-center relative border-t border-base-300 h-auto flex-col">
       {!!isReplyChatOpen && <ReplyChat />}
+      {isRecordingStart ? (
+        <VoiceRecorder onSend={handleSendVoiceMessage} />
+      ) : (
+        <div className={`w-full`}>
+          {imagePreview && (
+            <SelectImagePopup
+              imagePreview={imagePreview}
+              removeImage={removeImage}
+              // text={text}
+              // setText={setText}
+              handleSendMessage={handleSendMessage}
+            />
+          )}
 
-      {imagePreview && (
-        <SelectImagePopup
-          imagePreview={imagePreview}
-          removeImage={removeImage}
-          // text={text}
-          // setText={setText}
-          handleSendMessage={handleSendMessage}
-        />
-      )}
+          {imagePreview && discardImage && (
+            <DiscardImagePopup
+              setImagePreview={setImagePreview}
+              fileInputRef={fileInputRef}
+            />
+          )}
 
-      {imagePreview && discardImage && (
-        <DiscardImagePopup
-          setImagePreview={setImagePreview}
-          fileInputRef={fileInputRef}
-        />
-      )}
+          <form
+            onSubmit={handleSendMessage}
+            className={`flex items-center gap-2 flex-1 w-full`}
+          >
+            <div
+              className={`flex-1 ${
+                isRecordingStart ? "hidden" : "flex"
+              } gap-2 items-center`}
+              // className={`flex-1 flex gap-2 items-center`}
+            >
+              <EmojiPickerButton onClick={handleShowPicker} />
 
-      <form
-        onSubmit={handleSendMessage}
-        className="flex items-center gap-2 flex-1 w-full"
-      >
-        <div className="flex-1 flex gap-2 items-center">
-          <EmojiPickerButton onClick={handleShowPicker} />
+              <ImageUploadButton
+                fileInputRef={fileInputRef}
+                imagePreview={imagePreview}
+              />
 
-          <ImageUploadButton
-            fileInputRef={fileInputRef}
-            imagePreview={imagePreview}
-          />
+              <TextInputField
+                // text={text}
+                // setText={setText}
+                showPicker={showPicker}
+                setShowPicker={setShowPicker}
+                inputDisabled={inputDisabled}
+                fileInputRef={fileInputRef}
+                handleTyping={handleTyping}
+              />
 
-          <TextInputField
-            // text={text}
-            // setText={setText}
-            showPicker={showPicker}
-            setShowPicker={setShowPicker}
-            inputDisabled={inputDisabled}
-            fileInputRef={fileInputRef}
-            handleTyping={handleTyping}
-          />
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+              />
+            </div>
 
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-          />
+            <SendButton
+              // text={text}
+              imagePreview={imagePreview}
+              showPicker={showPicker}
+              setShowPicker={setShowPicker}
+              // setSingleMessageReply={setSingleMessageReply}
+              setIsReplyChatOpen={setIsReplyChatOpen}
+            />
+            {/* <VoiceRecorder onSend={handleSendVoiceMessage} /> */}
+          </form>
+
+          {showPicker && <EmojiPopup onEmojiClick={handleEmojiClick} />}
         </div>
-
-        <SendButton
-          // text={text}
-          imagePreview={imagePreview}
-          showPicker={showPicker}
-          setShowPicker={setShowPicker}
-          // setSingleMessageReply={setSingleMessageReply}
-          setIsReplyChatOpen={setIsReplyChatOpen}
-        />
-      </form>
-
-      {showPicker && <EmojiPopup onEmojiClick={handleEmojiClick} />}
+      )}
     </div>
   );
 };

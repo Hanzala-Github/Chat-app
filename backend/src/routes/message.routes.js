@@ -9,12 +9,15 @@ import {
   deleteMessageForMe,
   deleteMessageForEveryOne,
 } from "../controllers/message.controller.js";
+import { uploadVoice } from "../middlewares/uploadVoice.middleware.js";
 
 const router = Router();
 
 router.route("/users").get(protectRoute, getUsersForSidebar);
 router.route("/:id").get(protectRoute, getMessages);
-router.route("/send/:id").post(protectRoute, sendMessage);
+router
+  .route("/send/:id")
+  .post(protectRoute, uploadVoice.single("voice"), sendMessage);
 router
   .route("/delete-messages-history/:id")
   .delete(protectRoute, deleteMessagesHistory);

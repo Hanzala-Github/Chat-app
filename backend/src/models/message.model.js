@@ -81,6 +81,24 @@ const messageSchema = new Schema(
     text: { type: String, trim: true },
     image: { type: String },
 
+    // voice: {
+    //   url: { type: String, default: null },
+    //   duration: { type: Number, default: 0 },
+    // },
+
+    voice: {
+      url: String,
+      duration: Number,
+      mimeType: String,
+      size: Number,
+      provider: { type: String, default: "local" },
+    },
+
+    type: {
+      type: String,
+      enum: ["text", "image", "voice"],
+      default: "text",
+    },
     isReply: { type: Boolean, default: false },
     replyTo: { type: Schema.Types.ObjectId, ref: "Message", default: null },
 
@@ -96,7 +114,7 @@ const messageSchema = new Schema(
 
     seenAt: { type: Date, default: null },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Indexes for fast lookups
@@ -108,7 +126,7 @@ messageSchema.statics.updateStatus = async function (messageId, status) {
   return this.findByIdAndUpdate(
     messageId,
     { status, ...(status === "seen" && { seenAt: new Date() }) },
-    { new: true }
+    { new: true },
   );
 };
 
